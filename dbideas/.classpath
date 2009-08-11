@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="WEB-INF/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="TOMCAT_COMMON_LIB/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-beanutils-1.6.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/toplink-essentials.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-collections-3.2.jar"/>
+	<classpathentry kind="output" path="WEB-INF/classes"/>
+</classpath>

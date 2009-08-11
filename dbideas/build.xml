@@ -1,0 +1,79 @@
+<project name="dbIdeas" default="js.minify" basedir=".">
+	<target name="js.minify" >
+	    <!-- <apply executable="java" parallel="false">
+	        <fileset dir="." includes="shBrushSql.js,shCore.js,dwloader.js"/>
+	        <arg line="-jar"/>
+	        <arg path="yuicompressor-2.4.2.jar"/>
+	        <srcfile/>
+	        <arg line="-o"/>
+	        <mapper type="glob" from="*.js" to="build/*-min.js"/>
+	        <targetfile/>
+	    </apply> -->
+		
+		
+		
+		<concat destfile="build/draw_all.js"
+		          force="no">
+			<fileset file="wz_jsgraphics.js" />
+			<fileset file="mootools.js" />
+			<fileset file="moocanvas.js" />
+			<fileset file="draw2d_patched.js" />
+		  </concat>
+		
+		<concat destfile="build/ext_all.js"
+				          force="no">
+					<fileset file="ext/adapter/ext/ext-base.js" />
+					<fileset file="ext/ext-all.js" />
+					<fileset file="ext/Multiselect.js"/>
+					<fileset file="ext/DDView.js"/> 
+					<fileset file="ext/bufferview.js" />
+		 </concat>
+		
+		<apply executable="java" parallel="false">
+			        <fileset dir="build" includes="ext_all.js"/>
+			        <arg line="-jar"/>
+			        <arg path="yuicompressor-2.4.2.jar"/>
+			        <srcfile/>
+			        <arg line="-o"/>
+			        <mapper type="glob" from="*.js" to="build/*-min.js"/>
+			        <targetfile/>
+		</apply>
+		
+		<concat destfile="build/dbIdeas_all.js"
+						          force="no">
+							<fileset file="dbgraphics.js" />
+							<fileset file="gridFactories.js" />
+							<fileset file="dbideas.js"/>
+		</concat>
+		
+		<!--  <delete file="build/shCore-min.js"/>
+		<delete file="build/shBrushSql-min.js"/> -->
+	</target>
+	<target name="css.minify" >
+		
+		<concat destfile="ext/resources/css/dbIdeas.css"
+						          force="no">
+							<fileset file="ext/resources/css/ext-all.css" />
+							<fileset file="ext/resources/css/xtheme-gray-min.css" />
+							<fileset file="ext/Multiselect.css"/>
+		</concat>
+				
+		<apply executable="java" parallel="false">
+							        <fileset dir="ext/resources/css" includes="dbIdeas.css"/>
+							        <arg line="-jar"/>
+							        <arg path="yuicompressor-2.4.2.jar"/>
+							        <srcfile/>
+							        <arg line="-o"/>
+							        <mapper type="glob" from="*.css" to="ext/resources/css/*-min.css"/>
+							        <targetfile/>
+							   
+		</apply>
+		
+	</target>
+	
+	 <target name="war" description="Building the war file">
+		  <war destfile="c:/temp/dwloader.war" webxml="WEB-INF/web.xml"> 
+	         <fileset dir="" excludes="**/*.java WEB-INF/lib/derby.jar yuicompressor-2.4.2.jar"/>
+	      </war>
+	  </target>
+</project>
