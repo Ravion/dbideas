@@ -39,7 +39,7 @@ import javax.persistence.Version;
 )
 
 @Entity
-@Table(name = "DWL_SOURCE")
+@Table(name = "SOURCE")
 public class Source {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
