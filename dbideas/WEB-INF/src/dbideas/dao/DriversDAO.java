@@ -50,8 +50,8 @@ public class DriversDAO {
 		List<Driver> ls=q.getResultList();
 		return ls;
 	}
-	public  static  Driver getDriver(EntityManager em,int aliasID) {
-		Driver driver=em.find(Driver.class, Integer.valueOf(aliasID));
+	public  static  Driver getDriver(EntityManager em,int id) {
+		Driver driver=em.find(Driver.class, Integer.valueOf(id));
 		return driver;
 		
 	}

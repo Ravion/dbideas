@@ -239,7 +239,7 @@ public class Do extends HttpServlet {
 					obj.put("result",objsr);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				if(et!=null && et.isActive())
 					et.rollback();
 				try {

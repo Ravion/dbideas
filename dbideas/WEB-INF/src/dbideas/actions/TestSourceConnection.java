@@ -18,6 +18,9 @@
 */
 package dbideas.actions;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +29,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import dbideas.JSONAction;
+import dbideas.dao.DriversDAO;
 import dbideas.dao.SourcesDAO;
+import dbideas.entities.Driver;
 import dbideas.entities.Source;
 
 public class TestSourceConnection implements JSONAction {
+
+	String password;
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	int id;
 	public void setId(int id) {
@@ -41,22 +51,21 @@ public class TestSourceConnection implements JSONAction {
 			throws Exception {
 		Source s=SourcesDAO.getSource(em, id);
 		
-//		String driverClass=s.getDriverName();
-//		String jdbcUrl=s.getJdbcUrl();
-//		String username=s.getUserName();
-//		String pwd=s.getPassword();
-//		//Driver drv=null;
-//		Connection conn=null;
-//		try{
-//			@SuppressWarnings("unused")
-//			Driver drv=(Driver)Class.forName(driverClass).newInstance();
-//			conn=DriverManager.getConnection(jdbcUrl, username, pwd);
-//		}
-//		finally{
-//			if(conn!=null){
-//				try{conn.close();}catch(Exception e){}
-//			}
-//		}
+		int driverid=s.getDriverid();
+		Driver driver = DriversDAO.getDriver(em, driverid);
+		String jdbcUrl=s.getJdbcUrl();
+		String username=s.getUserName();
+		//Driver drv=null;
+		Connection conn=null;
+		try{
+			Class.forName(driver.getDriverClassName());
+			conn=DriverManager.getConnection(jdbcUrl, username, password);
+		}
+		finally{
+			if(conn!=null){
+				try{conn.close();}catch(Exception e){}
+			}
+		}
 		
 		return new JSONObject();
 	}

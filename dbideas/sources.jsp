@@ -12,22 +12,27 @@
 
 <script type="text/javascript">
  function testSourceConnection(sourceid){
-	 
-	new Ext.data.Connection().request( {
-		url :'do?action=testSourceConnection&id=' + sourceid,
-		method :'post',
-		scope :this,
-		params :this.baseParams,
-		callback : function(options, bSuccess, response) {
-			var object = Ext.util.JSON.decode(response.responseText);
-			if (object.success) {
-				Ext.DomHelper.overwrite("sp<%=request.getAttribute("rn") %>"+sourceid,"&nbsp;&nbsp;<img style='vertical-align:middle' src='icons/accept.png'/>");
-			}else{
-				Ext.DomHelper.overwrite("sp<%=request.getAttribute("rn") %>"+sourceid,"&nbsp;&nbsp;<img style='vertical-align:middle' src='icons/cross.png'/>");
-				alert('failed:'+object.error);
-			}
-		}
-	});
+
+	 Ext.Msg.prompt('Password', 'Please enter the password:', function(btn, text_){
+		    if (btn == 'ok'){
+
+		    	new Ext.data.Connection().request( {
+		    		url :'do?action=testSourceConnection&id=' + sourceid,
+		    		method :'post',
+		    		scope :this,
+		    		params :{password: text_},
+		    		callback : function(options, bSuccess, response) {
+		    			var object = Ext.util.JSON.decode(response.responseText);
+		    			if (object.success) {
+		    				Ext.DomHelper.overwrite("sp<%=request.getAttribute("rn") %>"+sourceid,"&nbsp;&nbsp;<img style='vertical-align:middle' src='icons/accept.png'/>");
+		    			}else{
+		    				Ext.DomHelper.overwrite("sp<%=request.getAttribute("rn") %>"+sourceid,"&nbsp;&nbsp;<img style='vertical-align:middle' src='icons/cross.png'/>");
+		    				Ext.Msg.alert('Failed',object.error);
+		    			}
+		    		}
+		    	});
+		    }
+		});
  }
 
 </script>
@@ -38,7 +43,7 @@
 	<br/>
 <br/><img src="icons/transmit_blue.png" style="vertical-align:middle"/>&nbsp;<a  class="page" href="#" onclick="testSourceConnection(<%= source.getId() %>)">Test Connection</a>
 		</td>
-		<td style="vertical-align:top;border:1px solid green;padding:5px"><%=source.getJdbcUrl() %><br/><br/><%=source.getUserName() %>/******** </td>
+		<td style="vertical-align:top;border:1px solid green;padding:5px"><%=source.getJdbcUrl() %><br/><br/><%=source.getUserName() %> </td>
 	</tr>	   
    <% }
 %>
