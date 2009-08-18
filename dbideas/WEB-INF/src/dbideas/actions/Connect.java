@@ -33,6 +33,7 @@ import net.sourceforge.squirrel_sql.fw.sql.SQLConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import dbideas.IDManager;
 import dbideas.JSONAction;
 import dbideas.WebSQLSession;
 import dbideas.dao.DriversDAO;
@@ -86,7 +87,7 @@ public class Connect implements JSONAction {
 			SQLConnection conn=new SQLConnection(_conn,null,idriver);
 			//sessions.getSqlsessions().add(new SQLSession(source.getSourceName(),conn));
 			WebSQLSession sessions=(WebSQLSession)request.getSession(true).getAttribute("sessions");
-			sessions.getSqlsessions().add(new SQLSession(source.getSourceName(),conn));
+			sessions.getSqlsessions().add(new SQLSession(source.getSourceName()+" ("+IDManager.get().nextSessionID()+")",conn));
 			obj.put("success",true);
 			JSONArray arr=new JSONArray();
 			PluginManager.getInstance().dynamicPluginScripts(arr, conn);

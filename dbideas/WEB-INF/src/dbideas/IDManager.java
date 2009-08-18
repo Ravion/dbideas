@@ -34,6 +34,7 @@ public class IDManager {
 		threadlocalIDManager.set(ex);
 	}
 	AtomicInteger ai=new AtomicInteger(0);
+	AtomicInteger ai2=new AtomicInteger(0);
 	HashMap<String, Object> map=new HashMap<String, Object>();
 	protected  int nextInt(){
 		return ai.incrementAndGet();
@@ -47,5 +48,8 @@ public class IDManager {
 	}
 	synchronized public  Object get(String id) {
 		return map.get(id);
+	}
+	public int nextSessionID(){
+		return ai2.incrementAndGet();
 	}
 }

@@ -2047,7 +2047,8 @@ function createTree() {
 		triggerAction :'all',
 		selectOnFocus :true,
 		width :135,
-		forceSelection :true
+		forceSelection :true,
+		emptyText:'No connections'
 	});
 
 	treecombo.on('select', function(cmb, rc, idx) {
@@ -2155,42 +2156,6 @@ function createTree() {
 				tabKey :tabKey
 			});
 		}
-//		if(node.attributes.type!='tb'){
-//			menuTreeC.add(new Ext.menu.Item( {
-//				text :'Refresh...',
-//				icon :'icons/arrow_refresh.png',
-//				handler : function() {
-//					menuTreeC.nodeid.collapse(false, false);
-//					while (menuTreeC.nodeid.firstChild) {
-//						menuTreeC.nodeid.removeChild(menuTreeC.nodeid.firstChild);
-//					}
-//					menuTreeC.nodeid.childrenRendered = false;
-//					menuTreeC.nodeid.loaded = false;
-//					myTreeLoader.baseParams.refresh = true
-//					menuTreeC.nodeid.expand(false, false);
-//					myTreeLoader.baseParams.refresh = false
-//				}
-//			}));
-//		}
-//		if(node.attributes.type=='tb'|| node.attributes.type=='view'){
-//			menuTreeC.add(new Ext.menu.Item( {
-//				text :'Preview...',
-//				icon :'icons/magnifier.png',
-//				handler : function() {
-//					newEditorSelectAll(menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid.attributes.id,treecombo.getValue());
-//				}
-//			}));
-//			menuTreeC.add(new Ext.menu.Item( {
-//				text :'Select * ...',
-//				icon :'icons/page_edit.png',
-//				handler : function() {
-//				newEditor("select * from "+menuTreeC.nodeid.attributes.qname);
-//				}
-//			}));
-//			
-//		}
-//		menuTreeC.nodeid = node;
-//		menuTreeC.showAt(e.getXY());
 	});
 	treeselectionModel = tree.getSelectionModel();
 	treeselectionModel.on('beforeselect', nodeSelection);

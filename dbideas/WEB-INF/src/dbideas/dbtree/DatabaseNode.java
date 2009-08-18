@@ -136,7 +136,7 @@ public class DatabaseNode extends DBNode implements IStructureNode{
 	}
 		
 	public String getName() {
-		return "Database ["+sessionName+"]";
+		return sessionName;
 	}
 	public JSONObject toJSON() throws JSONException{
 		JSONObject obj=new JSONObject();

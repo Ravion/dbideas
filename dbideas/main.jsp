@@ -99,11 +99,14 @@
 			border: 1px solid #B5B8C8; overflow:auto;
 			cursor:default;
 		}
+		.database  a span{color:#3E62A6;font-weight:bold; }
 		.database .x-tree-node-icon{background:url('icons/database.png') no-repeat;}
+		.schema {font-weight:bold;}
 		.schema .x-tree-node-icon{background:url('icons/folder_database.png') no-repeat;}
 		.table .x-tree-node-icon{background:url('icons/table.png') no-repeat;}
 		.view .x-tree-node-icon{background:url('icons/application_view_tile.png') no-repeat;}
 		.tables .x-tree-node-icon{background:url('icons/table_multiple.png') no-repeat;}
+		.catalog {font-weight:bold;}
 		.catalog .x-tree-node-icon{background:url('icons/folder_page.png') no-repeat;}
 		.package .x-tree-node-icon{background:url('icons/package.png') no-repeat;}
 		.packageb .x-tree-node-icon{background:url('icons/package_green.png') no-repeat;}

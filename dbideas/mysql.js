@@ -123,5 +123,4 @@ function mysql_createDatabase(id){
 			
 		}
 }
-alert('loaded');
 loaded_plugin_scripts["mysql.js"] = true;
