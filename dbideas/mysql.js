@@ -75,7 +75,7 @@ function mysql_createDatabase(id){
 		};
 		
 		var dialog = new Ext.Window(config);
-		dialog.addButton('Close', dialog.close, dialog);
+		dialog.addButton('Cancel', dialog.close, dialog);
 		var createDBForm =  new Ext.form.FormPanel({
 			labelWidth: 95, 
 			url:'do?action=pluginAction&pluginName=MySQLPlugin&method=createDB' ,
@@ -123,3 +123,5 @@ function mysql_createDatabase(id){
 			
 		}
 }
+alert('loaded');
+loaded_plugin_scripts["mysql.js"] = true;

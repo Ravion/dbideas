@@ -3788,7 +3788,7 @@ function newPKForAlterTable(node, PKDef, dsPK) {
 }// end newPKForAlterTable
 
 function load_plugin_script(url_script){
-	if (this.loaded_plugin_scripts[url_script])
+	if (loaded_plugin_scripts[url_script])
 		return;	
 	//alert("load: "+url);
 	try{
@@ -3801,5 +3801,4 @@ function load_plugin_script(url_script){
 	}catch(e){
 		document.write('<sc'+'ript language="javascript" type="text/javascript" src="' + url_script + '" charset="UTF-8"></sc'+'ript>');
 	}
-	this.loaded_plugin_scripts[url_script] = true;
 }
