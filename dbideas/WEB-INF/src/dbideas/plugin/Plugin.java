@@ -51,5 +51,6 @@ public interface Plugin {
 
 	List<IStructureNode> getCatalogAddedChildren(CatalogNode schemaNode,
 			SQLConnection conn);
-
+	
+	JSONArray[] getDynamicPluginScripts(SQLConnection conn);
 }

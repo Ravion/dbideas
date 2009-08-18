@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.squirrel_sql.fw.sql.ISQLDriver;
 import net.sourceforge.squirrel_sql.fw.sql.SQLConnection;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dbideas.JSONAction;
@@ -39,6 +40,7 @@ import dbideas.dao.SourcesDAO;
 import dbideas.dbtree.SQLSession;
 import dbideas.entities.Driver;
 import dbideas.entities.Source;
+import dbideas.plugin.PluginManager;
 
 
 public class Connect implements JSONAction {
@@ -86,6 +88,9 @@ public class Connect implements JSONAction {
 			WebSQLSession sessions=(WebSQLSession)request.getSession(true).getAttribute("sessions");
 			sessions.getSqlsessions().add(new SQLSession(source.getSourceName(),conn));
 			obj.put("success",true);
+			JSONArray arr=new JSONArray();
+			PluginManager.getInstance().dynamicPluginScripts(arr, conn);
+			obj.put("pluginScripts", arr);
 		
 		return obj;
 	}

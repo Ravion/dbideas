@@ -239,4 +239,15 @@ public class MySQLPlugin implements Plugin {
 
 	}
 
+	public JSONArray[] getDynamicPluginScripts(SQLConnection conn) {
+		if(isMysql(conn)){
+			List<JSONArray> ls=new ArrayList<JSONArray>();
+			JSONArray obj=new JSONArray();
+			obj.put( "mysql.js");
+			ls.add(obj);
+			return ls.toArray(new JSONArray[0]);
+		}
+		return null;
+	}
+
 }

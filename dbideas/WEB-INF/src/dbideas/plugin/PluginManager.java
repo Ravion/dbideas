@@ -77,6 +77,17 @@ public class PluginManager {
 		
 	}
 	
+	public void dynamicPluginScripts(JSONArray arr,SQLConnection conn){
+		for (Plugin plugin : plugins) {
+			try{JSONArray[] objs = plugin.getDynamicPluginScripts(conn);
+			if(objs!=null ){
+				for(int i=0;i<objs.length;i++){
+					arr.put(objs[i]);
+				}
+			}
+			}catch(Exception e){}
+		}
+	}
 	public void loadAddedMenu(JSONArray arr, String sessionid, String nodeType) {
 		SQLSession sqlsession=(SQLSession)IDManager.get().get(sessionid);
 		SQLConnection conn;

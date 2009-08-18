@@ -440,4 +440,8 @@ public class OraclePlugin implements Plugin {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public JSONArray[] getDynamicPluginScripts(SQLConnection conn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
