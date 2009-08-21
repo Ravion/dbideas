@@ -28,7 +28,9 @@ public class SQLSession {
 	private SQLConnection conn;
 	private String sessionName;
 	DatabaseNode dn;
-	public SQLSession(String sessionName,SQLConnection conn){
+	private int sourceid;
+	public SQLSession(int sourceid,String sessionName,SQLConnection conn){
+		this.sourceid=sourceid;
 		this.id=IDManager.get().nextID();
 		IDManager.get().put(id,this);
 		this.conn=conn;
@@ -38,10 +40,10 @@ public class SQLSession {
 	public DatabaseNode getDatabaseNode(){
 		return dn;
 	}
-	public SQLSession(String sessionName){
-		this(sessionName,null);
-	}
 
+	public int getSourceid() {
+		return sourceid;
+	}
 	public SQLConnection getConn() {
 		return conn;
 	}

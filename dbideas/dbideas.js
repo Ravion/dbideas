@@ -138,7 +138,7 @@ var httpDatabasesProxy = new Ext.data.HttpProxy( {
 var databasesReader = new Ext.data.JsonReader( {
 	root :'result.databases',
 	id :'id'
-}, [ 'id', 'name','hasCatalogs','catalogs','catalog','autocommit' ]);
+}, [ 'id', 'iconurl','name','hasCatalogs','catalogs','catalog','autocommit' ]);
 
 var databasesDataStore = new Ext.data.Store( {
 	proxy :httpDatabasesProxy,
@@ -166,7 +166,7 @@ var treeReader = new Ext.data.JsonReader( {
 var sourcesReader = new Ext.data.JsonReader( {
 	root :'result.sources',
 	id :'id'
-}, [ 'id', 'sourceName', 'jdbcUrl', 'driverid', 'userName' ]);
+}, [ 'id', 'iconurl', 'sourceName', 'jdbcUrl', 'driverid', 'userName' ]);
 
 
 
@@ -222,20 +222,20 @@ var tabpanelpages = new Ext.TabPanel( {
 
 var xSourceTempl = new Ext.XTemplate(
 		'<tpl for=".">',
-		'<div class="x-combo-list-item" style="cursor:default;" id="{id}">{sourceName}</div>',
+		'<div class="x-combo-list-item" style="cursor:default;" id="{id}"><img src="{iconurl}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px;margin-right:5px" />{sourceName}</div>',
 		'</tpl>', '<div class="x-clear"></div>');
 
 var xdriverTempl = new Ext.XTemplate(
 		'<tpl for=".">',
 		'<div class="x-combo-list-item" style="cursor:default;" id="{id}">',
-		'<img src="{icon}" onerror="this.src=\'ext/resources/images/default/s.gif\'" style="width:16px;height:16px" />',
+		'<img src="{icon}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px" />',
 		' <tpl if="valid">',
 		'<span style=\'font-weight: bolder\'>{drvname}</span>', '</tpl>',
 		' <tpl if="!valid">',
 		'<span><s>{drvname}</s></span>',
 		'</tpl>', '</div>', '</tpl>', '<div class="x-clear"></div>');
 
-var srcDrvTpl=new Ext.XTemplate('<tpl for="."><div class="x-combo-list-item"><img src="{icon}" onerror="this.src=\'ext/resources/images/default/s.gif\'" style="width:16px;height:16px;margin-right:5px" /><tpl if="valid"><span style=\'font-weight: bolder\'>{drvname}</span></tpl><tpl if="!valid"><s>{drvname}</s></tpl></div></tpl>');
+var srcDrvTpl=new Ext.XTemplate('<tpl for="."><div class="x-combo-list-item"><img src="{icon}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px;margin-right:5px" /><tpl if="valid"><span style=\'font-weight: bolder\'>{drvname}</span></tpl><tpl if="!valid"><s>{drvname}</s></tpl></div></tpl>');
 
 var sourcesview;
 var driversview;
@@ -245,7 +245,7 @@ var outlineTempl = new Ext.XTemplate('<tpl for=".">',
 		'</tpl>', '<div class="x-clear"></div>');
 var xConnTempl = new Ext.XTemplate(
 		'<tpl for=".">',
-		'<div class="x-combo-list-item" style="cursor:default;" id="{id}">{name}</div>',
+		'<div class="x-combo-list-item" style="cursor:default;" id="{id}"><img src="{iconurl}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px;margin-right:5px" />{name}</div>',
 		'</tpl>', '<div class="x-clear"></div>');
 
 var menu_newconnection;
@@ -389,39 +389,6 @@ function createPage() {
 			items : []
 	});
 
-//	connection_menu.on('beforeshow', function() {
-//		connection_menu.removeAll();
-//		var selectedConnection = databasesDataStore
-//				.getAt(connection_menu.rowid);
-//		connection_menu.addMenuItem(new Ext.menu.Item( {
-//			text :'New SQL Editor',
-//			icon :'icons/page_edit.png',
-//			handler : function() {
-//				var editor = newEditor("");
-//				editor.tb.cmb.setValue(selectedConnection.get('id'));
-//			}
-//		}));
-//		connection_menu.addSeparator();
-//		connection_menu.addMenuItem(new Ext.menu.Item( {
-//			text :'Close Connection',
-//			icon :'icons/disconnect.png',
-//			handler :closeConnection
-//		}));
-//
-//		if (selectedConnection.get('autocommit') == false) {
-//			connection_menu.addSeparator();
-//			connection_menu.addMenuItem(new Ext.menu.Item( {
-//				text :'Commit',
-//				icon :'icons/database_save.png',
-//				handler :commitConnection
-//			}));
-//			connection_menu.addMenuItem(new Ext.menu.Item( {
-//				text :'Rollback',
-//				icon :'icons/arrow_undo.png',
-//				handler :rollbackConnection
-//			}));
-//		}
-//	});
 
 	connectionsview = new Ext.DataView( {
 		emptyText :'<div style="margin:5px"><span><b>No connections yet</b></span><br/><br/>You can connect to any defined source</div><div class="x-clear"></div>',

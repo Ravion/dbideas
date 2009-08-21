@@ -31,7 +31,10 @@ import org.json.JSONObject;
 
 import dbideas.JSONAction;
 import dbideas.WebSQLSession;
+import dbideas.dao.DriversDAO;
+import dbideas.dao.SourcesDAO;
 import dbideas.dbtree.SQLSession;
+import dbideas.entities.Driver;
 
 
 public class GetDatabases implements JSONAction {
@@ -43,8 +46,12 @@ public class GetDatabases implements JSONAction {
 		JSONArray arr=new JSONArray();
 		WebSQLSession sessions=(WebSQLSession)request.getSession(true).getAttribute("sessions");
 		for (SQLSession sqlsession : sessions.getSqlsessions()) {
+			
+			Driver driver=DriversDAO.getDriver(em, SourcesDAO.getSource(em, sqlsession.getSourceid()).getDriverid());
+			String iconurl=driver.getIconurl();
 			JSONObject obj=new JSONObject();
 			obj.put("id",sqlsession.getId());
+			obj.put("iconurl",iconurl);
 			obj.put("name",sqlsession.getSessionName());
 			try {
 				obj.put("autocommit",sqlsession.getConn().getAutoCommit());

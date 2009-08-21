@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2009 mazzolini at gmail.com
+ * This file is part of dbIdeas.
+ * 
+ * dbIdeas is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * dbIdeas is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with dbIdeas.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+*/
 var xsmargin=-5;
 var xemargin=10;
 var ysmargin=-5
@@ -981,9 +999,7 @@ TableConnection.prototype.serialize=function(){
 	ser["source"]=this.sourcePort.parentNode.title;
 	ser["target"]=this.targetPort.parentNode.title;
 	return ser;
-}//dbIdeas
-
-/*
+}/*
  * Copyright (c) 2009 mazzolini at gmail.com
  * This file is part of dbIdeas.
  * 
@@ -1162,9 +1178,28 @@ var sqlTableTemplate=new Ext.XTemplate('<table class="sqltable">',
 		return "HTML";
 	}
 
-sqlResultPluginFactories.push(new HTMLGridFactory());Ext.Ajax.timeout = 60000;
+sqlResultPluginFactories.push(new HTMLGridFactory());/*
+ * Copyright (c) 2009 mazzolini at gmail.com
+ * This file is part of dbIdeas.
+ * 
+ * dbIdeas is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * dbIdeas is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with dbIdeas.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+*/
+Ext.Ajax.timeout = 60000;
 var dynTabsArray = new Object();
 var dynMenuArray = new Object();
+var loaded_plugin_scripts=new Object();
 var southPanel;
 TreeStoreLoader = function(config) {
 
@@ -1283,7 +1318,7 @@ var httpDatabasesProxy = new Ext.data.HttpProxy( {
 var databasesReader = new Ext.data.JsonReader( {
 	root :'result.databases',
 	id :'id'
-}, [ 'id', 'name','hasCatalogs','catalogs','catalog','autocommit' ]);
+}, [ 'id', 'iconurl','name','hasCatalogs','catalogs','catalog','autocommit' ]);
 
 var databasesDataStore = new Ext.data.Store( {
 	proxy :httpDatabasesProxy,
@@ -1311,7 +1346,7 @@ var treeReader = new Ext.data.JsonReader( {
 var sourcesReader = new Ext.data.JsonReader( {
 	root :'result.sources',
 	id :'id'
-}, [ 'id', 'sourceName', 'jdbcUrl', 'driverid', 'userName' ]);
+}, [ 'id', 'iconurl', 'sourceName', 'jdbcUrl', 'driverid', 'userName' ]);
 
 
 
@@ -1367,20 +1402,20 @@ var tabpanelpages = new Ext.TabPanel( {
 
 var xSourceTempl = new Ext.XTemplate(
 		'<tpl for=".">',
-		'<div class="x-combo-list-item" style="cursor:default;" id="{id}">{sourceName}</div>',
+		'<div class="x-combo-list-item" style="cursor:default;" id="{id}"><img src="{iconurl}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px;margin-right:5px" />{sourceName}</div>',
 		'</tpl>', '<div class="x-clear"></div>');
 
 var xdriverTempl = new Ext.XTemplate(
 		'<tpl for=".">',
 		'<div class="x-combo-list-item" style="cursor:default;" id="{id}">',
-		'<img src="{icon}" onerror="this.src=\'ext/resources/images/default/s.gif\'" style="width:16px;height:16px" />',
+		'<img src="{icon}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px" />',
 		' <tpl if="valid">',
 		'<span style=\'font-weight: bolder\'>{drvname}</span>', '</tpl>',
 		' <tpl if="!valid">',
-		'<span style=\'font-style: italic\'>{drvname}</span>',
+		'<span><s>{drvname}</s></span>',
 		'</tpl>', '</div>', '</tpl>', '<div class="x-clear"></div>');
 
-
+var srcDrvTpl=new Ext.XTemplate('<tpl for="."><div class="x-combo-list-item"><img src="{icon}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px;margin-right:5px" /><tpl if="valid"><span style=\'font-weight: bolder\'>{drvname}</span></tpl><tpl if="!valid"><s>{drvname}</s></tpl></div></tpl>');
 
 var sourcesview;
 var driversview;
@@ -1390,7 +1425,7 @@ var outlineTempl = new Ext.XTemplate('<tpl for=".">',
 		'</tpl>', '<div class="x-clear"></div>');
 var xConnTempl = new Ext.XTemplate(
 		'<tpl for=".">',
-		'<div class="x-combo-list-item" style="cursor:default;" id="{id}">{name}</div>',
+		'<div class="x-combo-list-item" style="cursor:default;" id="{id}"><img src="{iconurl}" onerror="this.src=\'icons/database.png\'" style="vertical-align:middle;width:16px;height:16px;margin-right:5px" />{name}</div>',
 		'</tpl>', '<div class="x-clear"></div>');
 
 var menu_newconnection;
@@ -1452,11 +1487,12 @@ function createPage() {
 
 	sourcesview = new Ext.DataView( {
 		tpl :xSourceTempl,
-		emptyText :'No source yet',
+		emptyText :'<div style="overflow: hidden;padding:5px"><b>No sources yet</b><div style="overflow: hidden;margin-left:5px;margin-top:5px">You have to define at least one source in order to connect to your database.<br/><br/><a href="#" onclick="newsourcesPanel()"><img style="border:0;text-decoration: none;width:16px;height:16px;vertical-align:middle;margin-right:5px" src="icons/transmit_add.png"/>Create a new source</a></div></div><div class="x-clear"></div>',
 		singleSelect :true,
 		selectedClass :"ydataview-selected",
 		store :sourcesDataStore,
-		itemSelector :'div.x-combo-list-item'
+		itemSelector :'div.x-combo-list-item',
+		deferEmptyText: false
 	});
 	
 	driversview = new Ext.DataView( {
@@ -1465,7 +1501,8 @@ function createPage() {
 		singleSelect :true,
 		selectedClass :"ydataview-selected",
 		store :driversDataStore,
-		itemSelector :'div.x-combo-list-item'
+		itemSelector :'div.x-combo-list-item',
+		deferEmptyText: false
 	});
 
 	sourcesview.on('contextmenu', function(vw, idx, nd, e) {
@@ -1532,47 +1569,16 @@ function createPage() {
 			items : []
 	});
 
-//	connection_menu.on('beforeshow', function() {
-//		connection_menu.removeAll();
-//		var selectedConnection = databasesDataStore
-//				.getAt(connection_menu.rowid);
-//		connection_menu.addMenuItem(new Ext.menu.Item( {
-//			text :'New SQL Editor',
-//			icon :'icons/page_edit.png',
-//			handler : function() {
-//				var editor = newEditor("");
-//				editor.tb.cmb.setValue(selectedConnection.get('id'));
-//			}
-//		}));
-//		connection_menu.addSeparator();
-//		connection_menu.addMenuItem(new Ext.menu.Item( {
-//			text :'Close Connection',
-//			icon :'icons/disconnect.png',
-//			handler :closeConnection
-//		}));
-//
-//		if (selectedConnection.get('autocommit') == false) {
-//			connection_menu.addSeparator();
-//			connection_menu.addMenuItem(new Ext.menu.Item( {
-//				text :'Commit',
-//				icon :'icons/database_save.png',
-//				handler :commitConnection
-//			}));
-//			connection_menu.addMenuItem(new Ext.menu.Item( {
-//				text :'Rollback',
-//				icon :'icons/arrow_undo.png',
-//				handler :rollbackConnection
-//			}));
-//		}
-//	});
 
 	connectionsview = new Ext.DataView( {
-		emptyText :'No Connections yet',
+		emptyText :'<div style="margin:5px"><span><b>No connections yet</b></span><br/><br/>You can connect to any defined source</div><div class="x-clear"></div>',
+		//emptyText :'You can connect to any defined source',
 		tpl :xConnTempl,
 		singleSelect :true,
 		selectedClass :"ydataview-selected",
 		store :databasesDataStore,
-		itemSelector :'div.x-combo-list-item'
+		itemSelector :'div.x-combo-list-item',
+		deferEmptyText: false
 	});
 
 	connectionsview.on('contextmenu', function(vw, idx, nd, e) {
@@ -1854,7 +1860,8 @@ function editsourcesPanel(source) {
 		triggerAction :'all',
 		selectOnFocus :true,
 		width :400,
-		forceSelection :true
+		forceSelection :true,
+		tpl: srcDrvTpl
 	});
 	
 	updateSourceDriverCombo.on('select', function(cmb, rc, idx) {
@@ -2039,7 +2046,8 @@ function newsourcesPanel() {
 		triggerAction :'all',
 		selectOnFocus :true,
 		width :400,
-		forceSelection :true
+		forceSelection :true,
+		tpl: srcDrvTpl
 	});
 	
 	
@@ -3186,7 +3194,8 @@ function createTree() {
 		triggerAction :'all',
 		selectOnFocus :true,
 		width :135,
-		forceSelection :true
+		forceSelection :true,
+		emptyText:'No connections'
 	});
 
 	treecombo.on('select', function(cmb, rc, idx) {
@@ -3294,42 +3303,6 @@ function createTree() {
 				tabKey :tabKey
 			});
 		}
-//		if(node.attributes.type!='tb'){
-//			menuTreeC.add(new Ext.menu.Item( {
-//				text :'Refresh...',
-//				icon :'icons/arrow_refresh.png',
-//				handler : function() {
-//					menuTreeC.nodeid.collapse(false, false);
-//					while (menuTreeC.nodeid.firstChild) {
-//						menuTreeC.nodeid.removeChild(menuTreeC.nodeid.firstChild);
-//					}
-//					menuTreeC.nodeid.childrenRendered = false;
-//					menuTreeC.nodeid.loaded = false;
-//					myTreeLoader.baseParams.refresh = true
-//					menuTreeC.nodeid.expand(false, false);
-//					myTreeLoader.baseParams.refresh = false
-//				}
-//			}));
-//		}
-//		if(node.attributes.type=='tb'|| node.attributes.type=='view'){
-//			menuTreeC.add(new Ext.menu.Item( {
-//				text :'Preview...',
-//				icon :'icons/magnifier.png',
-//				handler : function() {
-//					newEditorSelectAll(menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid.attributes.id,treecombo.getValue());
-//				}
-//			}));
-//			menuTreeC.add(new Ext.menu.Item( {
-//				text :'Select * ...',
-//				icon :'icons/page_edit.png',
-//				handler : function() {
-//				newEditor("select * from "+menuTreeC.nodeid.attributes.qname);
-//				}
-//			}));
-//			
-//		}
-//		menuTreeC.nodeid = node;
-//		menuTreeC.showAt(e.getXY());
 	});
 	treeselectionModel = tree.getSelectionModel();
 	treeselectionModel.on('beforeselect', nodeSelection);
@@ -4018,6 +3991,12 @@ function openConnectionDialog(alias) {
 
 	}
 	function submitSuccessful(form, action) {
+		var pluginScripts=action.result.result.pluginScripts;
+		if(pluginScripts){
+			   for (var i = 0, l = pluginScripts.length; i < l; i++) {
+				   load_plugin_script(pluginScripts[i][0]);
+			   }
+		}
 		dialogConnection.close();
 		databasesDataStore.reload();
 	}
@@ -4919,3 +4898,19 @@ function newPKForAlterTable(node, PKDef, dsPK) {
 	dialog.show();
 	newPKForm.render(dialog.body);
 }// end newPKForAlterTable
+
+function load_plugin_script(url_script){
+	if (loaded_plugin_scripts[url_script])
+		return;	
+	//alert("load: "+url);
+	try{
+		var script= document.createElement("script");
+		script.type= "text/javascript";
+		script.src= url_script;
+		script.charset= "UTF-8";
+		var head= document.getElementsByTagName("head");
+		head[0].appendChild(script);
+	}catch(e){
+		document.write('<sc'+'ript language="javascript" type="text/javascript" src="' + url_script + '" charset="UTF-8"></sc'+'ript>');
+	}
+}

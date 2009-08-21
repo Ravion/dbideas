@@ -87,7 +87,7 @@ public class Connect implements JSONAction {
 			SQLConnection conn=new SQLConnection(_conn,null,idriver);
 			//sessions.getSqlsessions().add(new SQLSession(source.getSourceName(),conn));
 			WebSQLSession sessions=(WebSQLSession)request.getSession(true).getAttribute("sessions");
-			sessions.getSqlsessions().add(new SQLSession(source.getSourceName()+" ("+IDManager.get().nextSessionID()+")",conn));
+			sessions.getSqlsessions().add(new SQLSession(sourceid,source.getSourceName()+" ("+IDManager.get().nextSessionID()+")",conn));
 			obj.put("success",true);
 			JSONArray arr=new JSONArray();
 			PluginManager.getInstance().dynamicPluginScripts(arr, conn);

@@ -27,7 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dbideas.JSONAction;
+import dbideas.dao.DriversDAO;
 import dbideas.dao.SourcesDAO;
+import dbideas.entities.Driver;
 import dbideas.entities.Source;
 
 
@@ -39,8 +41,11 @@ public class GetSources implements JSONAction {
 		JSONArray arr=new JSONArray();
 		
 		for (Source source : SourcesDAO.getSources(em)) {
+			Driver driver=DriversDAO.getDriver(em, source.getDriverid());
+			String iconurl=driver.getIconurl();
 			JSONObject obj=new JSONObject();
 			obj.put("id", source.getId());
+			obj.put("iconurl", iconurl);
 			obj.put("sourceName",source.getSourceName());
 			obj.put("creationDate",source.getCreationDate());
 			obj.put("driverid",source.getDriverid());
