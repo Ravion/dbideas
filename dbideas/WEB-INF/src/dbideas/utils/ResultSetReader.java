@@ -20,6 +20,8 @@
 package dbideas.utils;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -301,10 +303,10 @@ public class ResultSetReader
 					case -9:
 					case -8:
 						row[i] = _rs.getString(idx);
-//						if (_rs.wasNull())
-//						{
-//							row[i] = null;
-//						}
+						try{if (_rs.wasNull())
+						{
+							row[i] = null;
+						}}catch(Throwable t){}
 						break;
 
 					case Types.BINARY:
@@ -314,31 +316,33 @@ public class ResultSetReader
 						break;
 
 					case Types.BLOB:
-						// Since we are reading Meta-data about the DB, we should
-						// never see a BLOB. If we do, the contents are not interpretable
-						// by Squirrel, so just tell the user that it is a BLOB and that it
-						// has data.
-
-                        row[i] = "BLOB";//DataTypeBlob.staticReadResultSet(_rs, idx);
+						Blob blob = _rs.getBlob(idx);
+						try{if(_rs.wasNull())row[i]=null;break;}catch(Error e){}
+						if(blob!=null ){
+							
+							byte[] b=blob.getBytes(1, (int)blob.length());
+							row[i] = new String(b);
+						}
 
 						break;
 
 					case Types.CLOB:
-						// Since we are reading Meta-data about the DB, we should
-						// never see a CLOB. However, if we do we assume that
-						// it is printable text and that the user wants to see it, so
-						// read in the entire thing.
-                        row[i] = "CLOB";//DataTypeClob.staticReadResultSet(_rs, idx);
+						Clob clob = _rs.getClob(idx);
+						try{if(_rs.wasNull())row[i]=null;break;}catch(Error e){}
+						if(clob!=null ){
+							
+							row[i]=clob.getSubString(1,(int)clob.length());
+						}
 
 						break;
 
 						//Add begin
 					case Types.JAVA_OBJECT:
 					    row[i] = _rs.getObject(idx);
-//					    if (_rs.wasNull())
-//					    {
-//					        row[i] = null;
-//					    }
+					    try{if (_rs.wasNull())
+					    {
+					        row[i] = null;
+					    }}catch(Throwable t){}
 					    break;
 					    //Add end
 

@@ -54,17 +54,24 @@ public class GetMenu implements JSONAction {
 //		obj.put("alert('test '+menuTreeC.nodeid.attributes.type);");
 //		arr.put(obj);
 		
-		JSONArray obj=new JSONArray();
-		obj.put("Refresh...");
-		obj.put("icons/arrow_refresh.png");
-		obj.put("refreshNode(menuTreeC.nodeid);");
-		arr.put(obj);
+		if(!"tb".equals(nodeType)){
+			JSONArray obj=new JSONArray();
+			obj.put("Refresh...");
+			obj.put("icons/arrow_refresh.png");
+			obj.put("refreshNode(menuTreeC.nodeid);");
+			arr.put(obj);
+		}
 		
 		if("tb".equals(nodeType)){
-			obj=new JSONArray();
+			JSONArray obj=new JSONArray();
 			obj.put("Select All");
 			obj.put("icons/page_edit.png");
 			obj.put("newEditor('select * from '+menuTreeC.nodeid.attributes.qname);");
+			arr.put(obj);
+			obj=new JSONArray();
+			obj.put("Export Table...");
+			obj.put("icons/cd_edit.png");
+			obj.put("exportTable(menuTreeC.nodeid);");
 			arr.put(obj);
 			obj=new JSONArray();
 			obj.put("Alter Table...");
@@ -72,7 +79,7 @@ public class GetMenu implements JSONAction {
 			obj.put("alterTable(menuTreeC.nodeid);");
 			arr.put(obj);
 		}else if("view".equals(nodeType)) {
-			obj=new JSONArray();
+			JSONArray obj=new JSONArray();
 			obj.put("Select All");
 			obj.put("icons/page_edit.png");
 			obj.put("newEditor('select * from '+menuTreeC.nodeid.attributes.qname);");

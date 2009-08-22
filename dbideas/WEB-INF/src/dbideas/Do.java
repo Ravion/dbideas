@@ -50,7 +50,9 @@ import dbideas.actions.Connect;
 import dbideas.actions.CreateSource;
 import dbideas.actions.DeleteDriver;
 import dbideas.actions.DeleteSource;
+import dbideas.actions.DoExport;
 import dbideas.actions.ExecuteSQL;
+import dbideas.actions.ExportTablePage;
 import dbideas.actions.GenerateDDLAlterTable;
 import dbideas.actions.GenerateDDLCreateIndex;
 import dbideas.actions.GetAdditionalData;
@@ -155,7 +157,8 @@ public class Do extends HttpServlet {
 		tmp2.put("config",ConfigPage.class);
 		
 		tmp2.put("sourcesPage",SourcesPage.class);
-		
+		tmp2.put("exportTablePage", ExportTablePage.class);
+		tmp2.put("doExport",DoExport.class);
 		pageActionMap=Collections.unmodifiableMap(tmp2);
 		
 	}

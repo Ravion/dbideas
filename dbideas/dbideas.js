@@ -1299,76 +1299,76 @@ function createDriverMenu() {
 
 
 
-function starttest(qid,rn){
-	new Ext.data.Connection().request( {
-		url :'do?action=startTest&id=' + qid,
-		method :'post',
-		scope :this,
-		params :this.baseParams,
-		qid:qid,
-		rn:rn,
-		callback : function(options, bSuccess, response) {
-			var object = Ext.util.JSON.decode(response.responseText);
-			if (object.success) {
-				testid=object.result.tid;
-				Ext.Updater.defaults.showLoadIndicator = false;
-				Ext.Updater.defaults.loadScripts=true;
-				Ext.Updater.defaults.disableCaching=true;
-				var el = Ext.get("test"+options.rn);
-				var mgr = el.getUpdater();
-				mgr.startAutoRefresh(1, "do?action=testFeedback&tid="+testid+"&rn="+options.rn+"&qid="+options.qid,null,null,false);
-			}
-		}
-	});
-}
-
-function startrun(qid,rn,driverid){
-	new Ext.data.Connection().request( {
-		url :'do?action=startRun&driverid='+driverid+'&id=' + qid,
-		method :'post',
-		scope :this,
-		params :this.baseParams,
-		qid:qid,
-		rn:rn,
-		callback : function(options, bSuccess, response) {
-			var object = Ext.util.JSON.decode(response.responseText);
-			if (object.success) {
-				raid=object.result.raid;
-				Ext.Updater.defaults.showLoadIndicator = false;
-				Ext.Updater.defaults.loadScripts=true;
-				Ext.Updater.defaults.disableCaching=true;
-				var el = Ext.get("run"+options.rn);
-				var mgr = el.getUpdater();
-				mgr.startAutoRefresh(1, "do?action=runAllFeedback&raid="+raid+"&rn="+options.rn+"&sid="+options.sid,null,null,false);
-			}
-		}
-	});
-}
-
-function startrunall(sid,rn,driverid, checkedQueries){
-	new Ext.data.Connection().request( {
-		url :'do?action=startRunAll&driverid='+driverid+'&sid=' + sid,
-		method :'post',
-		scope :this,
-		params : {
-			checkedQueries:checkedQueries
-		},
-		sid:sid,
-		rn:rn,
-		callback : function(options, bSuccess, response) {
-			var object = Ext.util.JSON.decode(response.responseText);
-			if (object.success) {
-				raid=object.result.raid;
-				Ext.Updater.defaults.showLoadIndicator = false;
-				Ext.Updater.defaults.loadScripts=true;
-				Ext.Updater.defaults.disableCaching=true;
-				var el = Ext.get("run"+options.rn);
-				var mgr = el.getUpdater();
-				mgr.startAutoRefresh(1, "do?action=runAllFeedback&raid="+raid+"&rn="+options.rn+"&sid="+options.sid,null,null,false);
-			}
-		}
-	});
-}
+//function starttest(qid,rn){
+//	new Ext.data.Connection().request( {
+//		url :'do?action=startTest&id=' + qid,
+//		method :'post',
+//		scope :this,
+//		params :this.baseParams,
+//		qid:qid,
+//		rn:rn,
+//		callback : function(options, bSuccess, response) {
+//			var object = Ext.util.JSON.decode(response.responseText);
+//			if (object.success) {
+//				testid=object.result.tid;
+//				Ext.Updater.defaults.showLoadIndicator = false;
+//				Ext.Updater.defaults.loadScripts=true;
+//				Ext.Updater.defaults.disableCaching=true;
+//				var el = Ext.get("test"+options.rn);
+//				var mgr = el.getUpdater();
+//				mgr.startAutoRefresh(1, "do?action=testFeedback&tid="+testid+"&rn="+options.rn+"&qid="+options.qid,null,null,false);
+//			}
+//		}
+//	});
+//}
+//
+//function startrun(qid,rn,driverid){
+//	new Ext.data.Connection().request( {
+//		url :'do?action=startRun&driverid='+driverid+'&id=' + qid,
+//		method :'post',
+//		scope :this,
+//		params :this.baseParams,
+//		qid:qid,
+//		rn:rn,
+//		callback : function(options, bSuccess, response) {
+//			var object = Ext.util.JSON.decode(response.responseText);
+//			if (object.success) {
+//				raid=object.result.raid;
+//				Ext.Updater.defaults.showLoadIndicator = false;
+//				Ext.Updater.defaults.loadScripts=true;
+//				Ext.Updater.defaults.disableCaching=true;
+//				var el = Ext.get("run"+options.rn);
+//				var mgr = el.getUpdater();
+//				mgr.startAutoRefresh(1, "do?action=runAllFeedback&raid="+raid+"&rn="+options.rn+"&sid="+options.sid,null,null,false);
+//			}
+//		}
+//	});
+//}
+//
+//function startrunall(sid,rn,driverid, checkedQueries){
+//	new Ext.data.Connection().request( {
+//		url :'do?action=startRunAll&driverid='+driverid+'&sid=' + sid,
+//		method :'post',
+//		scope :this,
+//		params : {
+//			checkedQueries:checkedQueries
+//		},
+//		sid:sid,
+//		rn:rn,
+//		callback : function(options, bSuccess, response) {
+//			var object = Ext.util.JSON.decode(response.responseText);
+//			if (object.success) {
+//				raid=object.result.raid;
+//				Ext.Updater.defaults.showLoadIndicator = false;
+//				Ext.Updater.defaults.loadScripts=true;
+//				Ext.Updater.defaults.disableCaching=true;
+//				var el = Ext.get("run"+options.rn);
+//				var mgr = el.getUpdater();
+//				mgr.startAutoRefresh(1, "do?action=runAllFeedback&raid="+raid+"&rn="+options.rn+"&sid="+options.sid,null,null,false);
+//			}
+//		}
+//	});
+//}
 
 function EditorPage(text) {
 
@@ -2190,6 +2190,10 @@ function createAboutPage(){
 }
 function createDataSourcesPage(){
 	createTabPage("do?action=sourcesPage","icons/transmit.png","Sources");
+}
+
+function createExportTablePage(node){
+	createTabPage("do?action=exportTablePage&id="+node.id,"icons/cd_edit.png","Export Table "+node.attributes.qname);
 }
 
 function createdriversPage(){
@@ -3733,4 +3737,7 @@ function load_plugin_script(url_script){
 	}catch(e){
 		document.write('<sc'+'ript language="javascript" type="text/javascript" src="' + url_script + '" charset="UTF-8"></sc'+'ript>');
 	}
+}
+function exportTable(node){
+	createExportTablePage(node);
 }

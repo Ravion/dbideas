@@ -163,7 +163,6 @@
 <script type="text/javascript">var sqlResultPluginFactories=[];</script>
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Building UI...';</script>
 <script type="text/javascript" src="build/dbIdeas_all.js"></script> 
-
 <script type="text/javascript">
 //<![CDATA[	
 	Ext.BLANK_IMAGE_URL = 'ext/resources/images/default/s.gif';

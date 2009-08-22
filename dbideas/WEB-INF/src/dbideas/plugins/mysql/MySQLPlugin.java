@@ -38,9 +38,13 @@ import dbideas.dbtree.CatalogNode;
 import dbideas.dbtree.DatabaseNode;
 import dbideas.dbtree.IStructureNode;
 import dbideas.dbtree.SchemaNode;
+import dbideas.dbtree.TableNode;
 import dbideas.plugin.Plugin;
 import dbideas.plugins.mysql.actions.CreateDBDDL;
+import dbideas.plugins.mysql.actions.DropTable;
+import dbideas.plugins.mysql.actions.EmptyTable;
 import dbideas.plugins.mysql.actions.GetCollations;
+import dbideas.plugins.mysql.actions.RenameTable;
 import dbideas.plugins.mysql.actions.ShowCharacterSets;
 import dbideas.plugins.mysql.actions.ShowCollations;
 import dbideas.plugins.mysql.actions.ShowDatabases;
@@ -88,6 +92,21 @@ public class MySQLPlugin implements Plugin {
 				obj.put("Repair Table");
 				obj.put("icons/wrench_orange.png");
 				obj.put("newEditor('repair table '+menuTreeC.nodeid.attributes.qname).execute()");
+				ls.add(obj);
+				obj=new JSONArray();
+				obj.put("Rename Table...");
+				obj.put("icons/textfield_rename.png");
+				obj.put("mysql_renameTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
+				ls.add(obj);
+				obj=new JSONArray();
+				obj.put("Empty Table...");
+				obj.put("icons/cut.png");
+				obj.put("mysql_emptyTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
+				ls.add(obj);
+				obj=new JSONArray();
+				obj.put("Drop Table...");
+				obj.put("icons/bomb.png");
+				obj.put("mysql_dropTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
 				ls.add(obj);
 				
 			}
@@ -234,6 +253,23 @@ public class MySQLPlugin implements Plugin {
 			String collation=request.getParameter("collation");
 			CreateDBDDL ddl=new CreateDBDDL(dn.getConn(),name,collation);
 			return ddl.execute();
+		}else if ("renameTable".equals(method)){
+			String tableName=request.getParameter("tableName");
+			String newName=request.getParameter("newName");
+			TableNode tn=(TableNode)IDManager.get().get(id);
+			RenameTable rt=new RenameTable(tn.getConn(),tableName,newName);
+			return rt.execute();
+		}else if ("emptyTable".equals(method)){
+			String tableName=request.getParameter("tableName");
+			TableNode tn=(TableNode)IDManager.get().get(id);
+			EmptyTable et1=new EmptyTable(tn.getConn(), tableName);
+			return et1.execute();
+		}
+		else if ("dropTable".equals(method)){
+			String tableName=request.getParameter("tableName");
+			TableNode tn=(TableNode)IDManager.get().get(id);
+			DropTable dt=new DropTable(tn.getConn(), tableName);
+			return dt.execute();
 		}
 		return null;
 

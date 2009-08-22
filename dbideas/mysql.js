@@ -17,6 +17,55 @@
  * 
 */
 
+
+function mysql_emptyTable(id,tableName,node){
+	Ext.Msg.confirm('Empty Table '+tableName,'Do you really want to TRUNCATE TABLE '+tableName+'?',function(btn){
+		
+		if(btn=='yes'){
+			new Ext.data.Connection().request( {
+	    		url :'do?action=pluginAction&pluginName=MySQLPlugin&method=emptyTable',
+	    		method :'post',
+	    		scope :this,
+	    		params :{id:id,tableName: tableName},
+	    		callback : function(options, bSuccess, response) {
+	    		}
+	    	});
+		}
+	});
+}
+function mysql_dropTable(id,tableName,node){
+	Ext.Msg.confirm('Drop Table '+tableName,'Do you really want to DROP TABLE '+tableName+'?',function(btn){
+		
+		if(btn=='yes'){
+			new Ext.data.Connection().request( {
+	    		url :'do?action=pluginAction&pluginName=MySQLPlugin&method=dropTable',
+	    		method :'post',
+	    		scope :this,
+	    		params :{id:id,tableName: tableName},
+	    		callback : function(options, bSuccess, response) {
+	    			refreshNode(node.parentNode);
+	    		}
+	    	});
+		}
+	});
+}
+function mysql_renameTable(id,tableName,node){
+	Ext.Msg.prompt('Rename Table '+tableName, 'Please enter the new table name:', function(btn, text_){
+	    if (btn == 'ok'){
+	    	new Ext.data.Connection().request( {
+	    		url :'do?action=pluginAction&pluginName=MySQLPlugin&method=renameTable',
+	    		method :'post',
+	    		scope :this,
+	    		params :{id:id,tableName: tableName,newName:text_},
+	    		callback : function(options, bSuccess, response) {
+	    			refreshNode(node.parentNode);
+	    		}
+	    	});
+	    	
+	    }
+	});
+}
+
 function mysql_createDatabase(id){
 	var collationsReader = new Ext.data.JsonReader({
 		root: 'result.collations',				 
@@ -123,4 +172,6 @@ function mysql_createDatabase(id){
 			
 		}
 }
+
+
 loaded_plugin_scripts["mysql.js"] = true;
