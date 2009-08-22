@@ -2144,16 +2144,20 @@ function refreshNode(node){
 function buildDynamicMenu(arr,menuTreeC){
 	for ( var i = 0; i < arr.length; i++) {
 
-		var newitem = new Ext.menu.Item( {
-			text :arr[i][0],
-			icon :arr[i][1]
-		});
-		newitem.iindex = i;
-		newitem.on("click", function() {
-			var script = arr[this.iindex][2];
-			eval(script);
-		}, this.scope, true);
-		menuTreeC.add(newitem);
+		if(arr[i][0]=='-'){
+			menuTreeC.add(new Ext.menu.Separator({}));
+		}else{
+			var newitem = new Ext.menu.Item( {
+				text :arr[i][0],
+				icon :arr[i][1]
+			});
+			newitem.iindex = i;
+			newitem.on("click", function() {
+				var script = arr[this.iindex][2];
+				eval(script);
+			}, this.scope, true);
+			menuTreeC.add(newitem);
+		}
 
 	}
 }

@@ -63,6 +63,34 @@ public class MySQLPlugin implements Plugin {
 			List<JSONArray> ls=new ArrayList<JSONArray>();
 			if("tb".equals(nodeType)){
 				JSONArray obj=new JSONArray();
+				obj.put("-");
+				obj.put("");
+				obj.put("");
+				ls.add(obj);
+				
+				obj=new JSONArray();
+				obj.put("Rename Table...");
+				obj.put("icons/textfield_rename.png");
+				obj.put("mysql_renameTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
+				ls.add(obj);
+				obj=new JSONArray();
+				obj.put("Empty Table...");
+				obj.put("icons/cut.png");
+				obj.put("mysql_emptyTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
+				ls.add(obj);
+				obj=new JSONArray();
+				obj.put("Drop Table...");
+				obj.put("icons/bomb.png");
+				obj.put("mysql_dropTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
+				ls.add(obj);
+				
+				obj=new JSONArray();
+				obj.put("-");
+				obj.put("");
+				obj.put("");
+				ls.add(obj);
+				
+				obj=new JSONArray();
 				obj.put("Analyze Table");
 				obj.put("icons/chart_pie.png");
 				obj.put("newEditor('analyze table '+menuTreeC.nodeid.attributes.qname).execute()");
@@ -93,21 +121,8 @@ public class MySQLPlugin implements Plugin {
 				obj.put("icons/wrench_orange.png");
 				obj.put("newEditor('repair table '+menuTreeC.nodeid.attributes.qname).execute()");
 				ls.add(obj);
-				obj=new JSONArray();
-				obj.put("Rename Table...");
-				obj.put("icons/textfield_rename.png");
-				obj.put("mysql_renameTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
-				ls.add(obj);
-				obj=new JSONArray();
-				obj.put("Empty Table...");
-				obj.put("icons/cut.png");
-				obj.put("mysql_emptyTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
-				ls.add(obj);
-				obj=new JSONArray();
-				obj.put("Drop Table...");
-				obj.put("icons/bomb.png");
-				obj.put("mysql_dropTable(menuTreeC.nodeid.id,menuTreeC.nodeid.attributes.qname,menuTreeC.nodeid)");
-				ls.add(obj);
+				
+				
 				
 			}
 			else if("tbs".equals(nodeType)){
@@ -257,7 +272,9 @@ public class MySQLPlugin implements Plugin {
 			String tableName=request.getParameter("tableName");
 			String newName=request.getParameter("newName");
 			TableNode tn=(TableNode)IDManager.get().get(id);
-			RenameTable rt=new RenameTable(tn.getConn(),tableName,newName);
+			CatalogNode cn=(CatalogNode)tn.getParent().getParent();
+			String catalogName=cn.getName();
+			RenameTable rt=new RenameTable(tn.getConn(),tableName,"`"+catalogName+"`.`"+newName+"`");
 			return rt.execute();
 		}else if ("emptyTable".equals(method)){
 			String tableName=request.getParameter("tableName");

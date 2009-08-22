@@ -78,6 +78,7 @@ public class GetMenu implements JSONAction {
 			obj.put("icons/table_edit.png");
 			obj.put("alterTable(menuTreeC.nodeid);");
 			arr.put(obj);
+			
 		}else if("view".equals(nodeType)) {
 			JSONArray obj=new JSONArray();
 			obj.put("Select All");
