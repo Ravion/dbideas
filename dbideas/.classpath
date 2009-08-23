@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/iText-2.0.7.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/poi-3.2-FINAL-20081019.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.2.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

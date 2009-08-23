@@ -1141,7 +1141,7 @@ var sqlTableTemplate=new Ext.XTemplate('<table class="sqltable">',
 		 '<thead><tr><tpl for="meta">',
 		 '<th class="sqlth">{.}</th>',
 		 '</tpl></tr></thead>','<tpl for="data"><tr><tpl for=".">',
-		 '<td nowrap="nowrap" class="sqltd">{.}</td>',
+		 '<td  class="sqltd">{.}</td>',
 		 '</tpl></tr></tpl></table>'
 	);
 
@@ -1201,6 +1201,7 @@ var dynTabsArray = new Object();
 var dynMenuArray = new Object();
 var loaded_plugin_scripts=new Object();
 var southPanel;
+var printingWindow;
 TreeStoreLoader = function(config) {
 
     /**
@@ -2949,6 +2950,7 @@ function sqlSuccessful(response, options) {
 						});
 				refresh.disable();
 
+				
 				var clLayout = new Ext.layout.CardLayout( {
 					deferredRender :true
 				});
@@ -2972,6 +2974,80 @@ function sqlSuccessful(response, options) {
 					}));
 				}
 
+				var printButton = new Ext.Toolbar.Button(
+				{
+					cls :'x-btn-icon',
+					icon :'icons/printer.png',
+					tooltip :'<b>Print </b><br/>Printable Version ',
+					handler : function() {
+						if (printingWindow && printingWindow.open && !printingWindow.closed) 
+							printingWindow.close();
+						printingWindow = window.open('','p','resizable=yes,width=600,height=400,toolbar=yes,scrollbars=yes,modal=yes');
+				    
+						printingWindow.document.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type" /><link rel="stylesheet" type="text/css" href="print.css"/> <title>Printing...</title></head><body><input onclick="this.style.visibility=\'hidden\';window.print()" type="button" value="Print"/><div id="printingDiv"></div></body></html>');
+						printingWindow.document.close();
+						
+						var sqlPrintingTableTemplate=new Ext.XTemplate('<table class="sqltable">',
+								 '<thead><tr><tpl for="meta">',
+								 '<th class="sqlth">{.}</th>',
+								 '</tpl></tr></thead>','<tpl for="data"><tr><tpl for=".">',
+								 '<td class="sqltd">{.}</td>',
+								 '</tpl></tr></tpl></table>'
+							);
+						var tmpObject=new Object();
+		        		tmpObject["data"]=myData;
+		        		tmpObject["meta"]=meta;
+		        		sqlPrintingTableTemplate.overwrite(printingWindow.document.getElementById("printingDiv") , tmpObject, true);
+						
+					}
+				});
+				var exportExcelButton=new Ext.Toolbar.Button({
+					cls :'x-btn-icon',
+					icon :'icons/page_excel.png',
+					tooltip :'<b>Export</b><br/>Export to Excel (experimental)',
+					handler : function() {
+//					excelWindow = window.open('','p','resizable=yes,width=600,height=400,toolbar=yes,scrollbars=yes,modal=yes');
+//					//excelWindow.document.open('application/vnd.ms-excel');
+//					excelWindow.document.write("<html><body><pre>"+resultGrid.getExcelXml(true)+"</pre></body></html>");
+//					excelWindow.document.close();
+					
+					var exportContent=resultGrid.getExcelXml(true);
+					
+					if (Ext.isGecko3) {
+
+                        document.location='data:application/vnd.ms-excel;Content-Disposition:attachment;filename=export_filename.xls;name=export.xls;base64,' + Base64.encode(exportContent);
+
+                    }
+					else{
+						if (!Ext.fly('frmDummy')) {
+	                        var frm = document.createElement('form');
+	                        frm.id = 'frmDummy';
+	                        frm.name = id;
+	                        frm.className = 'x-hidden';
+	                        frm.target='_blank';
+	                        document.body.appendChild(frm);
+	                    }
+	                    Ext.Ajax.request({
+	                        url: 'do?action=excelExport',
+	                        method : 'POST',
+	                        form: Ext.fly('frmDummy'),
+	                        isUpload:true,
+	                        params: { ex: resultGrid.getExcelXml(true) }
+	                    });
+					}
+                    
+//                    new Ext.data.Connection().request( {
+//						url :'do?action=excelExport',
+//						method :'post',
+//						params : {
+//							ex :resultGrid.getExcelXml(true)
+//						}
+//					});
+                    
+                    
+					//document.location='data:application/vnd.ms-excel;Content-Disposition:attachment;filename=export_filename.xls;name=export.xls;base64,' +Base64.encode(resultGrid.getExcelXml(true));
+					}
+				});
 				var clPanel = new Ext.Panel( {
 					closable :true,
 					title :"<img src='icons/table.png' style='vertical-align:bottom;height:16px;width:16px' >&nbsp;Results",
@@ -2990,7 +3066,7 @@ function sqlSuccessful(response, options) {
 						menu :menu_chooseSQLLayout,
 						style :'width:20px',
 						icon :"icons/layout.png"
-					} ],
+					} ,printButton,exportExcelButton ],
 					queryID :queryID
 
 				});

@@ -157,12 +157,13 @@
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Core API...';</script>
 
 <script type="text/javascript" src="build/ext_all-min.js"></script>
-
+<script type="text/javascript" src="grid_to_excel.js"></script>
 <script type="text/javascript" src="build/draw_all.js"></script> 
 <script type="text/javascript" src="edit_area/edit_area_loader.js"></script>
 <script type="text/javascript">var sqlResultPluginFactories=[];</script>
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Building UI...';</script>
 <script type="text/javascript" src="build/dbIdeas_all.js"></script> 
+
 <script type="text/javascript">
 //<![CDATA[	
 	Ext.BLANK_IMAGE_URL = 'ext/resources/images/default/s.gif';

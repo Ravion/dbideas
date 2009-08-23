@@ -140,7 +140,7 @@ var sqlTableTemplate=new Ext.XTemplate('<table class="sqltable">',
 		 '<thead><tr><tpl for="meta">',
 		 '<th class="sqlth">{.}</th>',
 		 '</tpl></tr></thead>','<tpl for="data"><tr><tpl for=".">',
-		 '<td nowrap="nowrap" class="sqltd">{.}</td>',
+		 '<td  class="sqltd">{.}</td>',
 		 '</tpl></tr></tpl></table>'
 	);
 
