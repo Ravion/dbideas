@@ -3001,6 +3001,13 @@ function sqlSuccessful(response, options) {
 						
 					}
 				});
+				var exportPDFButton=new Ext.Toolbar.Button({
+					cls :'x-btn-icon',
+					icon :'icons/page_white_acrobat.png',
+					tooltip :'<b>Export</b><br/>Export to PDF (not yet implemente)',
+					handler : function() {
+					}
+				});
 				var exportExcelButton=new Ext.Toolbar.Button({
 					cls :'x-btn-icon',
 					icon :'icons/page_excel.png',
@@ -3028,11 +3035,11 @@ function sqlSuccessful(response, options) {
 	                        document.body.appendChild(frm);
 	                    }
 	                    Ext.Ajax.request({
-	                        url: 'do?action=excelExport',
+	                        url: 'do',
 	                        method : 'POST',
 	                        form: Ext.fly('frmDummy'),
 	                        isUpload:true,
-	                        params: { ex: resultGrid.getExcelXml(true) }
+	                        params: { action:'excelExport',ex: resultGrid.getExcelXml(true) }
 	                    });
 					}
                     
@@ -3066,7 +3073,11 @@ function sqlSuccessful(response, options) {
 						menu :menu_chooseSQLLayout,
 						style :'width:20px',
 						icon :"icons/layout.png"
-					} ,printButton,exportExcelButton ],
+					}, {
+						xtype :'tbseparator'
+					},printButton,{
+						xtype :'tbseparator'
+					},exportExcelButton,exportPDFButton ],
 					queryID :queryID
 
 				});
