@@ -134,6 +134,12 @@ public class PDFTableExporter implements ITableExporter {
 	private final Color grayBackgroundColor=new Color(180,180,180);
 	private final String tableName;
 	private int rowIndex;
+	public PDFTableExporter(int columnCount)throws DocumentException{
+		this("");
+		table=new PdfPTable(columnCount);
+		table.setWidthPercentage(100);
+		formatters=new IColumnFormatter[columnCount];
+	}
 	public PDFTableExporter(String tableName) throws DocumentException{
 		this.tableName = tableName;
 		headerFont =new Font(Font.HELVETICA,9);

@@ -119,7 +119,7 @@ public class SQLExecutor {
 //			warn3.printStackTrace();
 		
 	}
-	public void next(JSONArray data)throws Exception{
+	public void next(JSONArray data, boolean all)throws Exception{
 		int loaded=0;
 		Object[]row;
 		if(closed==false){
@@ -131,11 +131,15 @@ public class SQLExecutor {
 					record.put(obj);
 				}
 				data.put(record);
-				if(loaded==limit)
+				if(loaded==limit && all==false)
 					break;
 			}
-			if( loaded<limit ){
+			if( loaded<limit &&all==false){
 				closed=true;
+				rs.close();
+				ps.close();
+			}
+			if(all==true){
 				rs.close();
 				ps.close();
 			}

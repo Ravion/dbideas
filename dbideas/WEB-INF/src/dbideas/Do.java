@@ -86,6 +86,7 @@ import dbideas.actions.GetTableColumnsForAlterTable;
 import dbideas.actions.GetTableIndexesForAlterTable;
 import dbideas.actions.GetTree;
 import dbideas.actions.GetTypesAlterTable;
+import dbideas.actions.PdfExport;
 import dbideas.actions.PluginAction;
 import dbideas.actions.Preview;
 import dbideas.actions.RollbackConnection;
@@ -174,6 +175,7 @@ public class Do extends HttpServlet {
 		
 		HashMap<String, Class<? extends IFileUploadAction>> tmp3 = new HashMap<String, Class<? extends IFileUploadAction>>();
 		tmp3.put("excelExport",ExcelExport.class );
+		tmp3.put("pdfExport", PdfExport.class);
 		fileUploadActionMap=Collections.unmodifiableMap(tmp3);
 	}
 	
@@ -336,14 +338,14 @@ public class Do extends HttpServlet {
 			Class<? extends IFileUploadAction> iactionclass=fileUploadActionMap.get(action);
 			if(iactionclass!=null){
 				try{
-					IFileUploadAction iPageAction=iactionclass.newInstance();
+					IFileUploadAction iFileUploadAction=iactionclass.newInstance();
 					//BeanUtils.populate(iPageAction, req.getParameterMap());
 					et=em.getTransaction();
 					et.begin();
-					iPageAction.execute(fileMap,parameterMap, resp, em,et);
+					iFileUploadAction.execute(fileMap,parameterMap, resp, em,et);
 					et.commit();
 				}catch(Exception e){
-					//e.printStackTrace();
+					e.printStackTrace();
 					//TODO return page with error
 					if(et!=null && et.isActive())
 						et.rollback();

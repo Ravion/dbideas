@@ -2942,6 +2942,32 @@ function sqlSuccessful(response, options) {
 						});
 					}
 				});
+				var nextAll = new Ext.Toolbar.Button( {
+					cls :'x-btn-icon',
+					icon :'icons/resultset_next2.png',
+					tooltip :'<b>Retrieve All </b><br/>Retrieve All Additional Records',
+					queryID :queryID,
+					myData :myData,
+					resultPanels :resultPanels,
+					handler : function() {
+						this.disable();
+						new Ext.data.Connection().request( {
+							url :'do?action=getAdditionalData',
+							method :'post',
+							params : {
+								all: 1,
+								queryID :this.queryID
+							},
+							failure :requestFailed,
+							success :sqlAdditionalSuccessfulAll,
+							sqlresultpanel :sqlresultpanel,
+							myData :this.myData,
+							nextAll :this,
+							next:next,
+							resultPanels :this.resultPanels
+						});
+					}
+				});
 				var refresh = new Ext.Toolbar.Button(
 						{
 							cls :'x-btn-icon',
@@ -3004,31 +3030,11 @@ function sqlSuccessful(response, options) {
 				var exportPDFButton=new Ext.Toolbar.Button({
 					cls :'x-btn-icon',
 					icon :'icons/page_white_acrobat.png',
-					tooltip :'<b>Export</b><br/>Export to PDF (not yet implemente)',
+					tooltip :'<b>Export</b><br/>Export to PDF',
 					handler : function() {
-					}
-				});
-				var exportExcelButton=new Ext.Toolbar.Button({
-					cls :'x-btn-icon',
-					icon :'icons/page_excel.png',
-					tooltip :'<b>Export</b><br/>Export to Excel (experimental)',
-					handler : function() {
-//					excelWindow = window.open('','p','resizable=yes,width=600,height=400,toolbar=yes,scrollbars=yes,modal=yes');
-//					//excelWindow.document.open('application/vnd.ms-excel');
-//					excelWindow.document.write("<html><body><pre>"+resultGrid.getExcelXml(true)+"</pre></body></html>");
-//					excelWindow.document.close();
-					
-					var exportContent=resultGrid.getExcelXml(true);
-					
-					if (Ext.isGecko3) {
-
-                        document.location='data:application/vnd.ms-excel;Content-Disposition:attachment;filename=export_filename.xls;name=export.xls;base64,' + Base64.encode(exportContent);
-
-                    }
-					else{
-						if (!Ext.fly('frmDummy')) {
+						if (!Ext.fly('frmPdfDummy')) {
 	                        var frm = document.createElement('form');
-	                        frm.id = 'frmDummy';
+	                        frm.id = 'frmPdfDummy';
 	                        frm.name = id;
 	                        frm.className = 'x-hidden';
 	                        frm.target='_blank';
@@ -3037,22 +3043,39 @@ function sqlSuccessful(response, options) {
 	                    Ext.Ajax.request({
 	                        url: 'do',
 	                        method : 'POST',
-	                        form: Ext.fly('frmDummy'),
+	                        form: Ext.fly('frmPdfDummy'),
 	                        isUpload:true,
-	                        params: { action:'excelExport',ex: resultGrid.getExcelXml(true) }
+	                        params: { action:'pdfExport',meta:Ext.util.JSON.encode(meta),data:Ext.util.JSON.encode(myData),info:Ext.util.JSON.encode(info2) }
 	                    });
 					}
+				});
+				var exportExcelButton=new Ext.Toolbar.Button({
+					cls :'x-btn-icon',
+					icon :'icons/page_white_excel.png',
+					tooltip :'<b>Export</b><br/>Export to Excel (experimental)',
+					handler : function() {				
+						var exportContent=resultGrid.getExcelXml(true);
+						if (Ext.isGecko3) {
+	                        document.location='data:application/vnd.ms-excel;Content-Disposition:attachment;filename=export_filename.xls;name=export.xls;base64,' + Base64.encode(exportContent);
+	                    }
+						else{
+							if (!Ext.fly('frmDummy')) {
+		                        var frm = document.createElement('form');
+		                        frm.id = 'frmDummy';
+		                        frm.name = id;
+		                        frm.className = 'x-hidden';
+		                        frm.target='_blank';
+		                        document.body.appendChild(frm);
+		                    }
+		                    Ext.Ajax.request({
+		                        url: 'do',
+		                        method : 'POST',
+		                        form: Ext.fly('frmDummy'),
+		                        isUpload:true,
+		                        params: { action:'excelExport',ex: resultGrid.getExcelXml(true) }
+		                    });
+						}
                     
-//                    new Ext.data.Connection().request( {
-//						url :'do?action=excelExport',
-//						method :'post',
-//						params : {
-//							ex :resultGrid.getExcelXml(true)
-//						}
-//					});
-                    
-                    
-					//document.location='data:application/vnd.ms-excel;Content-Disposition:attachment;filename=export_filename.xls;name=export.xls;base64,' +Base64.encode(resultGrid.getExcelXml(true));
 					}
 				});
 				var clPanel = new Ext.Panel( {
@@ -3063,7 +3086,7 @@ function sqlSuccessful(response, options) {
 					items :resultPanels,
 					layout :clLayout,
 					activeItem :preferredLayout,
-					tbar : [ next, {
+					tbar : [ next,nextAll, {
 						xtype :'tbseparator'
 					}, refresh, {
 						xtype :'tbseparator'
@@ -3559,6 +3582,8 @@ function sqlAdditionalSuccessful(response, options) {
 							options.myData);
 				}
 			}
+		}else{
+			options.next.disable();
 		}
 	} else {
 		options.sqlresultpanel.logPanel.error(object.error);
@@ -3571,6 +3596,11 @@ function sqlAdditionalSuccessful(response, options) {
 	}
 }// sqlAdditionalSuccessful
 
+function sqlAdditionalSuccessfulAll(response, options) {
+	sqlAdditionalSuccessful(response,options);
+	options.next.disable();
+	options.nextAll.disable();
+}
 function RelViewer() {
 
 	var relViewerToolbar = new Ext.Toolbar( {

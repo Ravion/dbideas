@@ -36,12 +36,16 @@ public class GetAdditionalData implements JSONAction {
 	public void setQueryID(String queryID) {
 		this.queryID = queryID;
 	}
+	int all=0;
+	public void setAll(int all) {
+		this.all = all;
+	}
 	public JSONObject execute(HttpServletRequest request,
 			HttpServletResponse response, EntityManager em, EntityTransaction et)
 			throws Exception {
 		SQLExecutor executor=(SQLExecutor)IDManager.get().get(queryID);
 		JSONArray data=new JSONArray();
-		executor.next(data);	
+		executor.next(data,all==1);	
 		JSONObject ret = new JSONObject();
 		ret.put("data", data);
 		return ret;
