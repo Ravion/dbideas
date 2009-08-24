@@ -58,6 +58,7 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
 
      var formTB=new Ext.Toolbar({items:[]});
      var rowIndex=0;
+     var firstRender=true;
      var formGrid = new Ext.grid.GridPanel({
          store: store2,
          formTB:formTB,
@@ -72,8 +73,22 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
          queryID:queryID,
          rowIndex:rowIndex,
          additionalData:function(addedData,totalData){},
+         refreshData:function(newData){var myData2 = [];
+         	this.rowIndex=0;
+	    	if(this.myData.length>0){
+		    	for(i=0;i<this.meta.length;i++){
+		    		var rc=[];
+		    		rc.push(this.meta[i]);
+		    		rc.push(this.myData[this.rowIndex][i]);
+		    		myData2.push(rc);
+		    	}
+	    	}
+		    this.store.loadData(myData2);
+		  },
+         
 	     listeners: {
 	     	render: function(){
+			  if(firstRender){
    	       		gridnext=new Ext.Toolbar.Button({
    	       			cls: 'x-btn-icon',
    	       			icon:'icons/resultset_next.png',
@@ -113,7 +128,10 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
 	    	    this.formTB.add(gridprev);
 	    	    this.formTB.add(gridnext);
 	    	    this.formTB.add(gridlast);
+	    	    firstRender=false;
+			  }
 	    	    var myData2 = [];
+	    	    this.rowIndex=0;
 		    	if(this.myData.length>0){
 			    	for(i=0;i<this.meta.length;i++){
 			    		var rc=[];
@@ -164,6 +182,14 @@ var sqlTableTemplate=new Ext.XTemplate('<table class="sqltable">',
 	    		}
 	    	},
 			additionalData:function(addedData,totalData){
+	    		if(this.loaded){
+		    		var tmpObject=new Object();
+		    		tmpObject["data"]=this.myData;
+		    		tmpObject["meta"]=this.meta;
+		    		sqlTableTemplate.overwrite(this.body, tmpObject, true);
+	    		}
+	    	},
+	    	refreshData:function(newData){
 	    		if(this.loaded){
 		    		var tmpObject=new Object();
 		    		tmpObject["data"]=this.myData;
