@@ -24,8 +24,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dbideas.actions.SQLExecutor;
 import dbideas.dbtree.SQLSession;
+import dbideas.utils.SQLExecutor;
 
 
 @SuppressWarnings("serial")

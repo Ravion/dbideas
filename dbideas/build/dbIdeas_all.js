@@ -1059,6 +1059,7 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
 
      var formTB=new Ext.Toolbar({items:[]});
      var rowIndex=0;
+     var firstRender=true;
      var formGrid = new Ext.grid.GridPanel({
          store: store2,
          formTB:formTB,
@@ -1073,8 +1074,22 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
          queryID:queryID,
          rowIndex:rowIndex,
          additionalData:function(addedData,totalData){},
+         refreshData:function(newData){var myData2 = [];
+         	this.rowIndex=0;
+	    	if(this.myData.length>0){
+		    	for(i=0;i<this.meta.length;i++){
+		    		var rc=[];
+		    		rc.push(this.meta[i]);
+		    		rc.push(this.myData[this.rowIndex][i]);
+		    		myData2.push(rc);
+		    	}
+	    	}
+		    this.store.loadData(myData2);
+		  },
+         
 	     listeners: {
 	     	render: function(){
+			  if(firstRender){
    	       		gridnext=new Ext.Toolbar.Button({
    	       			cls: 'x-btn-icon',
    	       			icon:'icons/resultset_next.png',
@@ -1114,7 +1129,10 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
 	    	    this.formTB.add(gridprev);
 	    	    this.formTB.add(gridnext);
 	    	    this.formTB.add(gridlast);
+	    	    firstRender=false;
+			  }
 	    	    var myData2 = [];
+	    	    this.rowIndex=0;
 		    	if(this.myData.length>0){
 			    	for(i=0;i<this.meta.length;i++){
 			    		var rc=[];
@@ -1171,6 +1189,14 @@ var sqlTableTemplate=new Ext.XTemplate('<table class="sqltable">',
 		    		tmpObject["meta"]=this.meta;
 		    		sqlTableTemplate.overwrite(this.body, tmpObject, true);
 	    		}
+	    	},
+	    	refreshData:function(newData){
+	    		if(this.loaded){
+		    		var tmpObject=new Object();
+		    		tmpObject["data"]=this.myData;
+		    		tmpObject["meta"]=this.meta;
+		    		sqlTableTemplate.overwrite(this.body, tmpObject, true);
+	    		}
 	    	}
 		});
 	}
@@ -1202,6 +1228,11 @@ var dynMenuArray = new Object();
 var loaded_plugin_scripts=new Object();
 var southPanel;
 var printingWindow;
+Array.prototype.clear=function()
+{
+    this.length = 0;
+};
+
 TreeStoreLoader = function(config) {
 
     /**
@@ -2969,16 +3000,34 @@ function sqlSuccessful(response, options) {
 					}
 				});
 				var refresh = new Ext.Toolbar.Button(
-						{
-							cls :'x-btn-icon',
-							icon :'icons/arrow_refresh.png',
-							tooltip :'<b>Refresh </b><br/>Execute Again (not yet implemented)'
+				{
+					cls :'x-btn-icon',
+					icon :'icons/arrow_refresh.png',
+					tooltip :'<b>Refresh </b><br/>Execute Again',
+					queryID :queryID,
+					myData :myData,
+					resultPanels :resultPanels,
+					handler:function(){
+						new Ext.data.Connection().request( {
+							url :'do?action=redoQuery',
+							method :'post',
+							params : {
+								queryID :this.queryID
+							},
+							failure :requestFailed,
+							success :sqlRefreshSuccessful,
+							sqlresultpanel :sqlresultpanel,
+							myData :this.myData,
+							nextAll :nextAll,
+							next:next,
+							resultPanels :this.resultPanels
 						});
-				refresh.disable();
+					}
+				});
 
-				
 				var clLayout = new Ext.layout.CardLayout( {
-					deferredRender :true
+					deferredRender :true,
+					layoutOnCardChange:true
 				});
 
 				var menu_chooseSQLLayout = new Ext.menu.Menu( {});
@@ -3121,6 +3170,35 @@ function sqlSuccessful(response, options) {
 		});
 	}
 }// end sqlSuccessful
+
+function sqlRefreshSuccessful(response, options){
+	sqlresultpanel = options.sqlresultpanel;
+	sqlresultpanel.logPanel.info('SQL Executed. Getting Response...');
+	var object = Ext.util.JSON.decode(response.responseText);
+	if (object.success) {
+		options.next.enable();
+		options.nextAll.enable();
+		data = object.result.data;
+		options.myData.clear();
+		for ( var i = 0; i < data.length; i++) {
+			options.myData.push(data[i]);
+		}
+		for ( var i = 0; i < options.resultPanels.length; i++) {
+			if (options.resultPanels[i].refreshData) {
+				options.resultPanels[i].refreshData(data);
+			}
+		}
+	} else {
+		sqlresultpanel.logPanel.error(object.error);
+		Ext.MessageBox.show( {
+			title :'Error',
+			msg :object.error,
+			buttons :Ext.MessageBox.OK,
+			icon :Ext.MessageBox.ERROR
+		});
+	}
+		
+}//end sqlRefreshSuccessful
 
 Logger = function() {
 	var tpl = new Ext.Template(
@@ -3554,6 +3632,11 @@ function createTableGrid(queryID, meta, myData) {
 			if (this.store.loaded) {
 				this.store.loadData(addedData, true);
 			}
+		},
+		refreshData: function(newData){
+			if (this.store.loaded) {
+				this.store.loadData(newData, false);
+			}
 		}
 	});
 
@@ -3562,6 +3645,7 @@ function onLayoutCheck(item, checked) {
 	if (checked) {
 		preferredLayout = item.sel;
 		item.clLayout.setActiveItem(item.activePanel);
+		item.activePanel.fireEvent('render', item.activePanel);
 
 	}
 }// end onLayoutCheck

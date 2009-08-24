@@ -16,7 +16,6 @@
  * along with dbIdeas.  If not, see <http://www.gnu.org/licenses/>.
  * 
 */
-
 package dbideas.actions;
 
 import javax.persistence.EntityManager;
@@ -31,25 +30,32 @@ import dbideas.IDManager;
 import dbideas.JSONAction;
 import dbideas.utils.SQLExecutor;
 
-
-public class GetAdditionalData implements JSONAction {
+public class RedoQuery implements JSONAction {
 	String queryID=null;
 	public void setQueryID(String queryID) {
 		this.queryID = queryID;
-	}
-	int all=0;
-	public void setAll(int all) {
-		this.all = all;
 	}
 	public JSONObject execute(HttpServletRequest request,
 			HttpServletResponse response, EntityManager em, EntityTransaction et)
 			throws Exception {
 		SQLExecutor executor=(SQLExecutor)IDManager.get().get(queryID);
+		JSONObject resultSet=new JSONObject();
+		JSONArray meta=new JSONArray(); 
 		JSONArray data=new JSONArray();
-		executor.next(data,all==1);	
-		JSONObject ret = new JSONObject();
-		ret.put("data", data);
-		return ret;
+		JSONArray info2=new JSONArray();
+		
+		
+		try{
+			executor.redoQuery( data, meta,info2);
+			info2.put(true);
+		}catch(Exception e){
+			info2.put(false);
+			info2.put(e.getMessage());
+		}
+		resultSet.put("meta", meta);
+		resultSet.put("data", data);
+		resultSet.put("info", info2);
+		return resultSet;
 	}
 
 }

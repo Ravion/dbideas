@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import dbideas.IDManager;
 import dbideas.JSONAction;
+import dbideas.utils.SQLExecutor;
 
 
 public class CloseResultSet implements JSONAction {

@@ -89,6 +89,7 @@ import dbideas.actions.GetTypesAlterTable;
 import dbideas.actions.PdfExport;
 import dbideas.actions.PluginAction;
 import dbideas.actions.Preview;
+import dbideas.actions.RedoQuery;
 import dbideas.actions.RollbackConnection;
 import dbideas.actions.SourcesPage;
 import dbideas.actions.TestSourceConnection;
@@ -124,6 +125,7 @@ public class Do extends HttpServlet {
 		tmp.put("getMeta",GetMeta.class);
 		tmp.put("getExportedKeys",GetExportedKeys.class);
 		tmp.put("getAdditionalData",GetAdditionalData.class);
+		tmp.put("redoQuery", RedoQuery.class);
 		tmp.put("changeCatalog",ChangeCatalog.class);
 		tmp.put("getColumnsForViewer",GetColumnsForViewer.class);
 		tmp.put("getSources",GetSources.class);

@@ -17,7 +17,7 @@
  * 
 */
 
-package dbideas.actions;
+package dbideas.utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,15 +29,19 @@ import net.sourceforge.squirrel_sql.fw.sql.SQLConnection;
 import org.json.JSONArray;
 
 import dbideas.IDManager;
-import dbideas.utils.ResultSetReader;
 
 public class SQLExecutor {
 	
-	public SQLExecutor(SQLConnection sqlconn, int limit){
+	private String query;
+	private final int maxLimit;
+
+	public SQLExecutor(SQLConnection sqlconn, int limit, int maxLimit, String query){
 		this.sqlconn=sqlconn;
+		this.maxLimit = maxLimit;
 		this.id=IDManager.get().nextID();
 		IDManager.get().put(id,this);
 		this.limit=limit;
+		this.query=query;
 	}
 	private SQLConnection sqlconn;
 	private int limit;
@@ -48,16 +52,16 @@ public class SQLExecutor {
 	private ResultSetReader reader;
 	boolean closed;
 	
-	public void executeQuery(String nextQuery, JSONArray data, JSONArray meta, JSONArray info)throws SQLException	{
+	public void executeQuery( JSONArray data, JSONArray meta, JSONArray info)throws SQLException	{
 		
 		
 		
 		info.put(id);
-		info.put(nextQuery);
+		info.put(query);
 //		if(sqlconn.getConnection() instanceof com.mysql.jdbc.Connection){
 //			((com.mysql.jdbc.Connection)sqlconn.getConnection()).setProfileSQL(true);
 //		}
-		ps=sqlconn.prepareStatement(nextQuery);
+		ps=sqlconn.prepareStatement(query);
 		
 		try {
 			ps.setFetchSize(limit);
@@ -133,6 +137,8 @@ public class SQLExecutor {
 				data.put(record);
 				if(loaded==limit && all==false)
 					break;
+				else if(all==true && loaded==maxLimit)
+					break;
 			}
 			if( loaded<limit &&all==false){
 				closed=true;
@@ -158,5 +164,10 @@ public class SQLExecutor {
 		} catch (SQLException e) {
 		}
 	
+	}
+	public void redoQuery(JSONArray data, JSONArray meta, JSONArray info2) throws SQLException {
+		close();
+		closed=false;
+		executeQuery(data, meta, info2);
 	}
 }

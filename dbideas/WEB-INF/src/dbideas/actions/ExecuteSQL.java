@@ -34,6 +34,7 @@ import dbideas.IDManager;
 import dbideas.JSONAction;
 import dbideas.WebSQLSession;
 import dbideas.dbtree.SQLSession;
+import dbideas.utils.SQLExecutor;
 
 public class ExecuteSQL implements JSONAction {
 	String sql, sessionid;
@@ -73,20 +74,22 @@ public class ExecuteSQL implements JSONAction {
 		qt.setScriptToTokenize(sql);
 		String nextQuery=null;
 		int limit=10;
+		int maxLimit=5000;
 		HttpSession session = request.getSession(true);
 		WebSQLSession sessions=(WebSQLSession)session.getAttribute("sessions");
 		
 		while(qt.hasQuery()){
-			SQLExecutor he = new SQLExecutor(conn,limit);
+			nextQuery=qt.nextQuery();
+			SQLExecutor he = new SQLExecutor(conn,limit,maxLimit,nextQuery);
 			sessions.getExecutors().add(he);
 			JSONObject resultSet=new JSONObject();
 			JSONArray meta=new JSONArray(); 
 			JSONArray data=new JSONArray();
 			JSONArray info2=new JSONArray();
-			nextQuery=qt.nextQuery();
+			
 			
 			try{
-				he.executeQuery(nextQuery, data, meta,info2);
+				he.executeQuery( data, meta,info2);
 				info2.put(true);
 			}catch(Exception e){
 				info2.put(false);
