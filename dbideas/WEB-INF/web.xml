@@ -12,7 +12,7 @@
 
     <context-param>
 		<param-name>dbIdeas_version</param-name>
-		<param-value>1.2</param-value>
+		<param-value>1.3beta</param-value>
 	</context-param>
 
 	<listener>

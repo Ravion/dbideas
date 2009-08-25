@@ -32,6 +32,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -134,11 +138,36 @@ public class PDFTableExporter implements ITableExporter {
 	private final Color grayBackgroundColor=new Color(180,180,180);
 	private final String tableName;
 	private int rowIndex;
-	public PDFTableExporter(int columnCount)throws DocumentException{
+	public PDFTableExporter(int columnCount, JSONArray meta)throws DocumentException{
 		this("");
 		table=new PdfPTable(columnCount);
 		table.setWidthPercentage(100);
 		formatters=new IColumnFormatter[columnCount];
+		for(int i=0;i<columnCount;i++){
+			try {
+				JSONObject row = meta.getJSONObject(i);
+				String label=row.getString("l");
+				table.addCell(createHeaderCell(label));
+				final String align=row.getString("al");
+				formatters[i]=new IColumnFormatter(){
+
+					public Object format(Object obj) {
+						if(obj!=null)
+							return obj.toString();
+						return null;
+					}
+
+					public int getAlign() {
+						if("right".equals(align))
+							return Element.ALIGN_RIGHT;
+						return Element.ALIGN_LEFT;
+					}
+					
+				};
+			} catch (JSONException e) {
+			}
+		}
+		table.setHeaderRows(1);
 	}
 	public PDFTableExporter(String tableName) throws DocumentException{
 		this.tableName = tableName;

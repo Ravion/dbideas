@@ -87,6 +87,7 @@ import dbideas.actions.GetTableIndexesForAlterTable;
 import dbideas.actions.GetTree;
 import dbideas.actions.GetTypesAlterTable;
 import dbideas.actions.PdfExport;
+import dbideas.actions.Ping;
 import dbideas.actions.PluginAction;
 import dbideas.actions.Preview;
 import dbideas.actions.RedoQuery;
@@ -142,7 +143,7 @@ public class Do extends HttpServlet {
 		tmp.put("deleteDriver",DeleteDriver.class);
 		tmp.put("updateDriver",UpdateDriver.class);
 		tmp.put("preview",Preview.class);
-		
+		tmp.put("ping", Ping.class);
 		
 		tmp.put("updateSource",UpdateSource.class);
 		

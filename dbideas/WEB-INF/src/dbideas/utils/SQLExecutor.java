@@ -23,10 +23,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import net.sourceforge.squirrel_sql.fw.sql.SQLConnection;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import dbideas.IDManager;
 
@@ -52,7 +55,7 @@ public class SQLExecutor {
 	private ResultSetReader reader;
 	boolean closed;
 	
-	public void executeQuery( JSONArray data, JSONArray meta, JSONArray info)throws SQLException	{
+	public void executeQuery( JSONArray data, JSONArray meta, JSONArray info)throws SQLException, JSONException	{
 		
 		
 		
@@ -82,9 +85,25 @@ public class SQLExecutor {
 				columncount=metadata.getColumnCount();
 				
 				for(int i=1;i<=columncount;i++){
-					
+					int type=metadata.getColumnType(i);
+					String align="left";
+					switch(type){
+						case Types.BIGINT :
+						case Types.DOUBLE:
+						case Types.FLOAT:
+						case Types.REAL:
+						case Types.DECIMAL:
+						case Types.NUMERIC:
+						case Types.INTEGER:
+						case Types.SMALLINT:
+						case Types.TINYINT:
+							align="right";
+					}
 					String label=metadata.getColumnLabel(i);
-					meta.put(label);
+					JSONObject headInfo=new JSONObject();
+					headInfo.put("l",label);
+					headInfo.put("al",align);
+					meta.put(headInfo);
 				}
 				reader=new ResultSetReader(rs);
 				int loaded=0;
@@ -165,7 +184,7 @@ public class SQLExecutor {
 		}
 	
 	}
-	public void redoQuery(JSONArray data, JSONArray meta, JSONArray info2) throws SQLException {
+	public void redoQuery(JSONArray data, JSONArray meta, JSONArray info2) throws SQLException, JSONException {
 		close();
 		closed=false;
 		executeQuery(data, meta, info2);

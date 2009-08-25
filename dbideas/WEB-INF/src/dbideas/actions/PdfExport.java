@@ -39,11 +39,11 @@ public class PdfExport implements IFileUploadAction {
 		
 		String meta_ = parameterMap.get("meta");
 		String data_ = parameterMap.get("data");
-		String info_ = parameterMap.get("info");
+		//String info_ = parameterMap.get("info");
 		JSONArray meta=new JSONArray(meta_); 
 		JSONArray data=new JSONArray(data_);
-		JSONArray info2=new JSONArray(info_);
-		PDFTableExporter tableExporter=new PDFTableExporter(meta.length());
+		//JSONArray info2=new JSONArray(info_);
+		PDFTableExporter tableExporter=new PDFTableExporter(meta.length(),meta);
 		/*ByteArrayOutputStream baos=new ByteArrayOutputStream(1024*16);
 		Document doc=new Document(PageSize.A4.rotate(), 25, 25, 80, 25);
 		PdfWriter writer = PdfWriter.getInstance(doc, baos);
