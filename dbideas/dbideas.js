@@ -27,6 +27,19 @@ Array.prototype.clear=function()
     this.length = 0;
 };
 
+var sqlPrintingTableTemplate=new Ext.XTemplate('<table class="sqltable">',
+		 '<thead><tr><tpl for="meta">',
+		 '<th class="sqlth">{[this.encode(values["l"])]}</th>',
+		 '</tpl></tr></thead>','<tpl for="data"><tr><tpl for=".">',
+		 '<td class="sqltd">{[this.encode(values)]}</td>',
+		 '</tpl></tr></tpl></table>',{
+		encode:function(val){
+			return Ext.util.Format.htmlEncode(val);
+		}
+	}
+	);
+//sqlPrintingTableTemplate.compile();
+
 TreeStoreLoader = function(config) {
 
     /**
@@ -499,6 +512,18 @@ function createPage() {
 //		 }
 	}, 250);
 
+	Ext.TaskMgr.start({
+	    run: function(){
+			new Ext.data.Connection().request( {
+				url :'do?action=ping',
+				method :'post',
+				scope :this
+			});
+		
+		},
+	    interval: 120000
+	});
+	
 }
 
 function createViewport() {
@@ -1302,80 +1327,6 @@ function createDriverMenu() {
 	return drivermenu;
 } // createdriverMenu
 
-
-
-
-//function starttest(qid,rn){
-//	new Ext.data.Connection().request( {
-//		url :'do?action=startTest&id=' + qid,
-//		method :'post',
-//		scope :this,
-//		params :this.baseParams,
-//		qid:qid,
-//		rn:rn,
-//		callback : function(options, bSuccess, response) {
-//			var object = Ext.util.JSON.decode(response.responseText);
-//			if (object.success) {
-//				testid=object.result.tid;
-//				Ext.Updater.defaults.showLoadIndicator = false;
-//				Ext.Updater.defaults.loadScripts=true;
-//				Ext.Updater.defaults.disableCaching=true;
-//				var el = Ext.get("test"+options.rn);
-//				var mgr = el.getUpdater();
-//				mgr.startAutoRefresh(1, "do?action=testFeedback&tid="+testid+"&rn="+options.rn+"&qid="+options.qid,null,null,false);
-//			}
-//		}
-//	});
-//}
-//
-//function startrun(qid,rn,driverid){
-//	new Ext.data.Connection().request( {
-//		url :'do?action=startRun&driverid='+driverid+'&id=' + qid,
-//		method :'post',
-//		scope :this,
-//		params :this.baseParams,
-//		qid:qid,
-//		rn:rn,
-//		callback : function(options, bSuccess, response) {
-//			var object = Ext.util.JSON.decode(response.responseText);
-//			if (object.success) {
-//				raid=object.result.raid;
-//				Ext.Updater.defaults.showLoadIndicator = false;
-//				Ext.Updater.defaults.loadScripts=true;
-//				Ext.Updater.defaults.disableCaching=true;
-//				var el = Ext.get("run"+options.rn);
-//				var mgr = el.getUpdater();
-//				mgr.startAutoRefresh(1, "do?action=runAllFeedback&raid="+raid+"&rn="+options.rn+"&sid="+options.sid,null,null,false);
-//			}
-//		}
-//	});
-//}
-//
-//function startrunall(sid,rn,driverid, checkedQueries){
-//	new Ext.data.Connection().request( {
-//		url :'do?action=startRunAll&driverid='+driverid+'&sid=' + sid,
-//		method :'post',
-//		scope :this,
-//		params : {
-//			checkedQueries:checkedQueries
-//		},
-//		sid:sid,
-//		rn:rn,
-//		callback : function(options, bSuccess, response) {
-//			var object = Ext.util.JSON.decode(response.responseText);
-//			if (object.success) {
-//				raid=object.result.raid;
-//				Ext.Updater.defaults.showLoadIndicator = false;
-//				Ext.Updater.defaults.loadScripts=true;
-//				Ext.Updater.defaults.disableCaching=true;
-//				var el = Ext.get("run"+options.rn);
-//				var mgr = el.getUpdater();
-//				mgr.startAutoRefresh(1, "do?action=runAllFeedback&raid="+raid+"&rn="+options.rn+"&sid="+options.sid,null,null,false);
-//			}
-//		}
-//	});
-//}
-
 function EditorPage(text) {
 
 	var logPanel = new Logger();
@@ -1856,13 +1807,7 @@ function sqlSuccessful(response, options) {
 						printingWindow.document.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type" /><link rel="stylesheet" type="text/css" href="print.css"/> <title>Printing...</title></head><body><input onclick="this.style.visibility=\'hidden\';window.print()" type="button" value="Print"/><div id="printingDiv"></div></body></html>');
 						printingWindow.document.close();
 						
-						var sqlPrintingTableTemplate=new Ext.XTemplate('<table class="sqltable">',
-								 '<thead><tr><tpl for="meta">',
-								 '<th class="sqlth">{.}</th>',
-								 '</tpl></tr></thead>','<tpl for="data"><tr><tpl for=".">',
-								 '<td class="sqltd">{.}</td>',
-								 '</tpl></tr></tpl></table>'
-							);
+						
 						var tmpObject=new Object();
 		        		tmpObject["data"]=myData;
 		        		tmpObject["meta"]=meta;
@@ -2389,16 +2334,17 @@ function createTableGrid(queryID, meta, myData) {
 
 	for (i = 0; i < meta.length; i++) {
 		rta.push( {
-			header :defaultRenderer(meta[i]),
-			dataIndex :meta[i],
+			header :defaultRenderer(meta[i]["l"]),
+			dataIndex :meta[i]["l"],
 			sortable :true,
-			renderer :defaultRenderer
+			renderer :defaultRenderer,
+			align:meta[i]["al"]
 		});
 	}
 	var fieldArray = [];
 	for (i = 0; i < meta.length; i++) {
 		fieldArray.push( {
-			name :meta[i]
+			name :meta[i]["l"]
 		});
 	}
 	var dsStore = new Ext.data.SimpleStore( {

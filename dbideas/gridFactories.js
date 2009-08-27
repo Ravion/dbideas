@@ -40,7 +40,7 @@ function formgridbutton(item){
   	if(item.formGrid.myData.length>0){
 	    	for(i=0;i<item.formGrid.meta.length;i++){
 	    		var rc=[];
-	    		rc.push(item.formGrid.meta[i]);
+	    		rc.push(item.formGrid.meta[i]["l"]);
 	    		rc.push(item.formGrid.myData[item.formGrid.rowIndex][i]);
 	    		myData2.push(rc);
 	    	}
@@ -78,7 +78,7 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
 	    	if(this.myData.length>0){
 		    	for(i=0;i<this.meta.length;i++){
 		    		var rc=[];
-		    		rc.push(this.meta[i]);
+		    		rc.push(this.meta[i]["l"]);
 		    		rc.push(this.myData[this.rowIndex][i]);
 		    		myData2.push(rc);
 		    	}
@@ -135,7 +135,7 @@ FormGridFactory.prototype.build=function(queryID,meta,myData){
 		    	if(this.myData.length>0){
 			    	for(i=0;i<this.meta.length;i++){
 			    		var rc=[];
-			    		rc.push(this.meta[i]);
+			    		rc.push(this.meta[i]["l"]);
 			    		rc.push(this.myData[this.rowIndex][i]);
 			    		myData2.push(rc);
 			    	}
@@ -156,11 +156,12 @@ sqlResultPluginFactories.push(new FormGridFactory());
 
 var sqlTableTemplate=new Ext.XTemplate('<table class="sqltable">',
 		 '<thead><tr><tpl for="meta">',
-		 '<th class="sqlth">{.}</th>',
+		 '<th class="sqlth">{[this.encode(values["l"])]}</th>',
 		 '</tpl></tr></thead>','<tpl for="data"><tr><tpl for=".">',
-		 '<td  class="sqltd">{.}</td>',
-		 '</tpl></tr></tpl></table>'
-	);
+		 '<td class="sqltd" align="">{[this.encode(values)]}</td>',
+		 '</tpl></tr></tpl></table>',{encode:function(val){return Ext.util.Format.htmlEncode(val);}}
+);
+sqlTableTemplate.compile();
 
 	function HTMLGridFactory(){
 	};

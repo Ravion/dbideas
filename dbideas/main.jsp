@@ -162,7 +162,7 @@
 <script type="text/javascript" src="edit_area/edit_area_loader.js"></script>
 <script type="text/javascript">var sqlResultPluginFactories=[];</script>
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Building UI...';</script>
-<script type="text/javascript" src="build/dbIdeas_all.js"></script> 
+<script type="text/javascript" src="build/dbIdeas_all-min.js"></script> 
 
 <script type="text/javascript">
 //<![CDATA[	
@@ -176,7 +176,7 @@
 		'<div class="x-grid3-cell-inner x-grid3-col-{id}" {attr}>{value}</div>',
 		'</td>'
 	);
-	
+	Ext.grid.GridView.prototype.templates.cell.compile();
 	Ext.onReady(function(){
 
 		createPage();
