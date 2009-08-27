@@ -46,6 +46,16 @@
 							<fileset file="dbideas.js"/>
 		</concat>
 		
+		<apply executable="java" parallel="false">
+			        <fileset dir="build" includes="dbIdeas_all.js"/>
+			        <arg line="-jar"/>
+			        <arg path="yuicompressor-2.4.2.jar"/>
+			        <srcfile/>
+			        <arg line="-o"/>
+			        <mapper type="glob" from="*.js" to="build/*-min.js"/>
+			        <targetfile/>
+		</apply>
+		
 		<!--  <delete file="build/shCore-min.js"/>
 		<delete file="build/shBrushSql-min.js"/> -->
 	</target>
