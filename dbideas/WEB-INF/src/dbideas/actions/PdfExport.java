@@ -44,11 +44,7 @@ public class PdfExport implements IFileUploadAction {
 		JSONArray data=new JSONArray(data_);
 		//JSONArray info2=new JSONArray(info_);
 		PDFTableExporter tableExporter=new PDFTableExporter(meta.length(),meta);
-		/*ByteArrayOutputStream baos=new ByteArrayOutputStream(1024*16);
-		Document doc=new Document(PageSize.A4.rotate(), 25, 25, 80, 25);
-		PdfWriter writer = PdfWriter.getInstance(doc, baos);
-		doc.open();
-		*/
+
 		for(int i=0;i<data.length();i++){
 			JSONArray row=data.getJSONArray(i);
 			tableExporter.newLine();
@@ -57,9 +53,7 @@ public class PdfExport implements IFileUploadAction {
 			}
 		}
 		tableExporter.finish();
-//		doc.add(new Paragraph("hello"));
-//		doc.close();
-//		writer.close();
+
 		response.setHeader("Pragma" ,"public");
 		response.setHeader("Expires", "0"); // set expiration time
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");

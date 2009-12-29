@@ -18,7 +18,6 @@
 */
 package dbideas.actions.export.impl;
 
-import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,22 +35,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.lowagie.text.Chunk;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfPageEventHelper;
-import com.lowagie.text.pdf.PdfTemplate;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import dbideas.actions.export.IColumnFormatter;
 import dbideas.actions.export.ITableExporter;
@@ -122,6 +122,7 @@ public class PDFTableExporter implements ITableExporter {
 			cb.showText(text);
 			cb.endText();
 			cb.addTemplate(tpl, document.left() + textSize, textBase);
+			cb.restoreState();
 		}
 
 	}
@@ -134,8 +135,8 @@ public class PDFTableExporter implements ITableExporter {
 	private PdfPCell emptyCell;	
 	private int columnCount=-1;
 	private Font headerFont;
-	private final Color grayBorderColor=new Color(150,150,150);
-	private final Color grayBackgroundColor=new Color(180,180,180);
+	private final BaseColor grayBorderColor=new BaseColor(150,150,150);
+	private final BaseColor grayBackgroundColor=new BaseColor(180,180,180);
 	private final String tableName;
 	private int rowIndex;
 	public PDFTableExporter(int columnCount, JSONArray meta)throws DocumentException{
@@ -173,7 +174,7 @@ public class PDFTableExporter implements ITableExporter {
 		this.tableName = tableName;
 		headerFont =new Font(Font.HELVETICA,9);
 		headerFont.setStyle(Font.BOLD);
-		headerFont.setColor(Color.white);
+		headerFont.setColor(BaseColor.WHITE);
 		defaultFont =new Font(Font.TIMES_ROMAN,Font.DEFAULTSIZE-1);
 		emptyCell = new PdfPCell(emptyPhrase);
 		writer =PdfWriter.getInstance(doc, baos);

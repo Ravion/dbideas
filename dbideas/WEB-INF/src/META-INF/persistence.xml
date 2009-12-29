@@ -4,21 +4,21 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 	<persistence-unit name="dbIdeas" transaction-type="RESOURCE_LOCAL">
-		<provider>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</provider>
+		<provider>org.eclipse.persistence.internal.jpa.EntityManagerFactoryProvider</provider>
 		<class>dbideas.entities.Driver</class> 
 		<class>dbideas.entities.Source</class> 
         <properties>
-        	<property name="toplink.target-database" value="Derby"/>
+        	<property name="esalink.target-database" value="Derby"/>
     
             <!-- Provider-specific connection properties -->
-            <property name="toplink.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-            <property name="toplink.jdbc.url" value="jdbc:derby:dbideas;create=true"/>
-            <property name="toplink.jdbc.user" value="sa"/>
-            <property name="toplink.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby:dbideas;create=true"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
             
             <!-- Provider-specific settings -->
-            <property name="toplink.logging.level" value="INFO"/>
-            <property name="toplink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
             
         </properties> 
 	</persistence-unit>

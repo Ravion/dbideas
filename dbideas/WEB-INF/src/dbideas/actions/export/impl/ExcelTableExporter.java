@@ -37,7 +37,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import com.lowagie.text.Element;
+import com.itextpdf.text.Element;
 
 import dbideas.actions.export.IColumnFormatter;
 import dbideas.actions.export.ITableExporter;
