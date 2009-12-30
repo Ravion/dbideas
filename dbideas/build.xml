@@ -1,4 +1,6 @@
 <project name="dbIdeas" default="js.minify" basedir=".">
+	
+		
 	<target name="js.minify" >
 	    <!-- <apply executable="java" parallel="false">
 	        <fileset dir="." includes="shBrushSql.js,shCore.js,dwloader.js"/>
@@ -13,7 +15,7 @@
 		
 		
 		<concat destfile="build/draw_all.js"
-		          force="no">
+		          force="yes">
 			<fileset file="wz_jsgraphics.js" />
 			<fileset file="mootools.js" />
 			<fileset file="moocanvas.js" />
@@ -21,12 +23,12 @@
 		  </concat>
 		
 		<concat destfile="build/ext_all.js"
-				          force="no">
-					<fileset file="ext/adapter/ext/ext-base.js" />
-					<fileset file="ext/ext-all.js" />
-					<fileset file="ext/Multiselect.js"/>
-					<fileset file="ext/DDView.js"/> 
-					<fileset file="ext/bufferview.js" />
+				          force="yes">
+					<fileset file="ext3.1.0/adapter/ext/ext-base.js" />
+					<fileset file="ext3.1.0/ext-all.js" />
+					<fileset file="ext3.1.0/Multiselect.js"/>
+					<fileset file="ext3.1.0/DDView.js"/> 
+					<fileset file="ext3.1.0/bufferview.js" />
 		 </concat>
 		
 		<apply executable="java" parallel="false">
@@ -40,7 +42,9 @@
 		</apply>
 		
 		<concat destfile="build/dbIdeas_all.js"
-						          force="no">
+						          force="yes">
+							
+							<fileset file="grid_to_excel.js" />
 							<fileset file="dbgraphics.js" />
 							<fileset file="gridFactories.js" />
 							<fileset file="dbideas.js"/>
@@ -61,20 +65,20 @@
 	</target>
 	<target name="css.minify" >
 		
-		<concat destfile="ext/resources/css/dbIdeas.css"
+		<concat destfile="ext3.1.0/resources/css/dbIdeas.css"
 						          force="no">
-							<fileset file="ext/resources/css/ext-all.css" />
-							<fileset file="ext/resources/css/xtheme-gray-min.css" />
-							<fileset file="ext/Multiselect.css"/>
+							<fileset file="ext3.1.0/resources/css/ext-all.css" />
+							<fileset file="ext3.1.0/resources/css/xtheme-gray-min.css" />
+							<fileset file="ext3.1.0/Multiselect.css"/>
 		</concat>
 				
 		<apply executable="java" parallel="false">
-							        <fileset dir="ext/resources/css" includes="dbIdeas.css"/>
+							        <fileset dir="ext3.1.0/resources/css" includes="dbIdeas.css"/>
 							        <arg line="-jar"/>
 							        <arg path="yuicompressor-2.4.2.jar"/>
 							        <srcfile/>
 							        <arg line="-o"/>
-							        <mapper type="glob" from="*.css" to="ext/resources/css/*-min.css"/>
+							        <mapper type="glob" from="*.css" to="ext3.1.0/resources/css/*-min.css"/>
 							        <targetfile/>
 							   
 		</apply>

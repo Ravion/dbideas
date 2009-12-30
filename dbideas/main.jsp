@@ -8,7 +8,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-	<link rel="stylesheet" type="text/css" href="ext/resources/css/dbIdeas-min.css"/> 
+	<link rel="stylesheet" type="text/css" href="ext3.1.0/resources/css/dbIdeas-min.css"/> 
 	<link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
 
     <title>dbIdeas</title>
@@ -157,16 +157,21 @@
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Core API...';</script>
 
 <script type="text/javascript" src="build/ext_all-min.js"></script>
-<script type="text/javascript" src="grid_to_excel.js"></script>
+<!--   <script type="text/javascript" src="grid_to_excel.js"></script> -->
 <script type="text/javascript" src="build/draw_all.js"></script> 
-<script type="text/javascript" src="edit_area/edit_area_loader.js"></script>
+ <script type="text/javascript" src="edit_area/edit_area_loader.js"></script> 
 <script type="text/javascript">var sqlResultPluginFactories=[];</script>
 <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Building UI...';</script>
-<script type="text/javascript" src="build/dbIdeas_all-min.js"></script> 
+<script type="text/javascript" src="build/dbIdeas_all-min.js"></script>  
+<!-- 
+
+ <script type="text/javascript" src="dbgraphics.js"></script>
+ <script type="text/javascript" src="gridFactories.js"></script>
+ <script type="text/javascript" src="dbideas.js"></script>-->
 
 <script type="text/javascript">
 //<![CDATA[	
-	Ext.BLANK_IMAGE_URL = 'ext/resources/images/default/s.gif';
+	Ext.BLANK_IMAGE_URL = 'ext3.1.0/resources/images/default/s.gif';
 	
 	if (!Ext.grid.GridView.prototype.templates) {
 		Ext.grid.GridView.prototype.templates = {};

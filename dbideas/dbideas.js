@@ -1389,7 +1389,8 @@ function EditorPage(text) {
 		layout :"border",
 		closable :true,
 		border :false,
-		execute: function(){toolbar.executeSQL()},
+		toolbar:toolbar,
+		execute: function(){this.toolbar.executeSQL()},
 		hideMode: 'offsets',
 		items : [ {
 			region :'north',
@@ -1632,7 +1633,7 @@ function createSQLToolbar(codepressEditor, sqlresultpanel) {
 	// 'tbseparator'},combo,catalogCombo,{xtype: 'tbseparator'},runBtn,{xtype:
 	// 'tbseparator'},commitBtn,rollbackBtn]});
 	var centerToolbar = new Ext.Toolbar( {
-		//executeSQL:executeSQL,
+		executeSQL:executeSQL,
 		listeners : {
 			render : function() {
 				this.addButton(clearBtn);
