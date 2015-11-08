@@ -1,0 +1,3 @@
+dbIdeas is a database explorer for your browser, with an intuitive interface, powered by ExtJS. On the server-side, a light java web app, connected to your database through JDBC...
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<img src='http://dbideas.googlecode.com/files/shot1.png' />
